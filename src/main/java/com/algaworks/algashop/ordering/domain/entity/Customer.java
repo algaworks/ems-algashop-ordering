@@ -1,11 +1,14 @@
 package com.algaworks.algashop.ordering.domain.entity;
 
+import com.algaworks.algashop.ordering.domain.validator.FieldValidations;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
+
+import static com.algaworks.algashop.ordering.domain.exception.ErrorMessages.*;
 
 public class Customer {
     private UUID id;
@@ -129,9 +132,9 @@ public class Customer {
     }
 
     private void setFullName(String fullName) {
-        Objects.requireNonNull(fullName);
+        Objects.requireNonNull(fullName, VALIDATION_ERROR_FULLNAME_IS_NULL);
         if(fullName.isBlank()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(VALIDATION_ERROR_FULLNAME_IS_BLANK);
         }
         this.fullName = fullName;
     }
@@ -142,19 +145,13 @@ public class Customer {
             return;
         }
         if (birthDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(VALIDATION_ERROR_BIRTHDATE_MUST_IN_PAST);
         }
         this.birthDate = birthDate;
     }
 
     private void setEmail(String email) {
-        Objects.requireNonNull(email);
-        if (email.isBlank()) {
-            throw new IllegalArgumentException();
-        }
-        if (!EmailValidator.getInstance().isValid(email)) {
-            throw new IllegalArgumentException();
-        }
+        FieldValidations.requiresValidEmail(email, VALIDATION_ERROR_EMAIL_IS_INVALID);
         this.email = email;
     }
 
