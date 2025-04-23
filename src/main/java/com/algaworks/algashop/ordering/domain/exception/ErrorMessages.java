@@ -12,4 +12,7 @@ public class ErrorMessages {
 
     public static final String ERROR_ORDER_DELIVERY_DATE_CANNOT_BE_IN_THE_PAST
             = "Order %s expected delivery date cannot be in the past";
+
+    public static final String ERROR_ORDER_CANNOT_BE_PLACED_HAS_NOT_ITEMS
+            = "Order %s cannot be closed, it has no items";
 }
