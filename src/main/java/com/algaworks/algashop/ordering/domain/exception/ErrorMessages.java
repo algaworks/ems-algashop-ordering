@@ -7,4 +7,6 @@ public class ErrorMessages {
     public static final String VALIDATION_ERROR_FULLNAME_IS_BLANK = "FullName cannot be blank";
 
     public static final String ERROR_CUSTOMER_ARCHIVED = "Customer is archived it cannot be changed";
+
+    public static final String ERROR_ORDER_STATUS_CANNOT_BE_CHANGED = "Cannot change order %s status from %s to %s";
 }
