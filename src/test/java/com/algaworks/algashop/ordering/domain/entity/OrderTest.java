@@ -7,7 +7,6 @@ import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.domain.valueobject.id.ProductId;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Or;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -217,7 +216,7 @@ class OrderTest {
 
         OrderItem orderItem = order.items().iterator().next();
 
-        order.changeItemQuantiy(orderItem.id(), new Quantity(5));
+        order.changeItemQuantity(orderItem.id(), new Quantity(5));
 
         Assertions.assertWith(order,
                 (o) -> Assertions.assertThat(o.totalAmount()).isEqualTo(new Money("50.00")),

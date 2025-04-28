@@ -144,7 +144,7 @@ public class Order {
         this.setExpectedDeliveryDate(expectedDeliveryDate);
     }
 
-    public void changeItemQuantiy(OrderItemId orderItemId, Quantity quantity) {
+    public void changeItemQuantity(OrderItemId orderItemId, Quantity quantity) {
         Objects.requireNonNull(orderItemId);
         Objects.requireNonNull(quantity);
 
