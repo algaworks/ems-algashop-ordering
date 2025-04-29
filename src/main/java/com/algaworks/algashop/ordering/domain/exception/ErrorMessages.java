@@ -22,12 +22,6 @@ public class ErrorMessages {
     public static final String ERROR_ORDER_CANNOT_BE_PLACED_HAS_NO_BILLING_INFO
             = "Order %s cannot be placed, it has no billing info";
 
-    public static final String ERROR_ORDER_CANNOT_BE_PLACED_INVALID_SHIPPING_COST
-            = "Order %s cannot be placed, it has no shipping cost";
-
-    public static final String ERROR_ORDER_CANNOT_BE_PLACED_INVALID_DELIVERY_DATE
-            = "Order %s cannot be placed, it has no delivery date";
-
     public static final String ERROR_ORDER_CANNOT_BE_PLACED_HAS_NO_PAYMENT_METHOD
             = "Order %s cannot be placed, it has no payment method";
 
