@@ -81,7 +81,7 @@ public class Order {
         Objects.requireNonNull(product);
         Objects.requireNonNull(quantity);
 
-        verifyIfChangeable();
+        this.verifyIfChangeable();
 
         product.checkOutOfStock();
 
@@ -118,20 +118,20 @@ public class Order {
 
     public void changePaymentMethod(PaymentMethod paymentMethod) {
         Objects.requireNonNull(paymentMethod);
-        verifyIfChangeable();
+        this.verifyIfChangeable();
         this.setPaymentMethod(paymentMethod);
     }
 
     public void changeBilling(Billing billing) {
         Objects.requireNonNull(billing);
-        verifyIfChangeable();
+        this.verifyIfChangeable();
         this.setBilling(billing);
     }
 
     public void changeShipping(Shipping newShipping) {
         Objects.requireNonNull(newShipping);
 
-        verifyIfChangeable();
+        this.verifyIfChangeable();
 
         if (newShipping.expectedDate().isBefore(LocalDate.now())) {
             throw new OrderInvalidShippingDeliveryDateException(this.id());
@@ -144,7 +144,7 @@ public class Order {
         Objects.requireNonNull(orderItemId);
         Objects.requireNonNull(quantity);
 
-        verifyIfChangeable();
+        this.verifyIfChangeable();
 
         OrderItem orderItem = this.findOrderItem(orderItemId);
         orderItem.changeQuantity(quantity);
@@ -154,12 +154,17 @@ public class Order {
 
     public void removeItem(OrderItemId orderItemId) {
         Objects.requireNonNull(orderItemId);
-        verifyIfChangeable();
+        this.verifyIfChangeable();
 
         OrderItem orderItem = findOrderItem(orderItemId);
         this.items.remove(orderItem);
 
-        recalculateTotals();
+        this.recalculateTotals();
+    }
+
+    public void cancel() {
+        this.setCanceledAt(OffsetDateTime.now());
+        this.changeStatus(OrderStatus.CANCELED);
     }
 
     public boolean isDraft() {
@@ -176,6 +181,10 @@ public class Order {
 
     public boolean isReady() {
         return OrderStatus.READY.equals(this.status());
+    }
+
+    public boolean isCanceled() {
+        return OrderStatus.CANCELED.equals(this.status());
     }
 
     public OrderId id() {
