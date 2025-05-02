@@ -21,12 +21,12 @@ class OrderTest {
         Order order = Order.draft(customerId);
 
         Assertions.assertWith(order,
-                o-> Assertions.assertThat(o.id()).isNotNull(),
-                o-> Assertions.assertThat(o.customerId()).isEqualTo(customerId),
-                o-> Assertions.assertThat(o.totalAmount()).isEqualTo(Money.ZERO),
-                o-> Assertions.assertThat(o.totalItems()).isEqualTo(Quantity.ZERO),
-                o-> Assertions.assertThat(o.isDraft()).isTrue(),
-                o-> Assertions.assertThat(o.items()).isEmpty(),
+                o -> Assertions.assertThat(o.id()).isNotNull(),
+                o -> Assertions.assertThat(o.customerId()).isEqualTo(customerId),
+                o -> Assertions.assertThat(o.totalAmount()).isEqualTo(Money.ZERO),
+                o -> Assertions.assertThat(o.totalItems()).isEqualTo(Quantity.ZERO),
+                o -> Assertions.assertThat(o.isDraft()).isTrue(),
+                o -> Assertions.assertThat(o.items()).isEmpty(),
 
                 o -> Assertions.assertThat(o.placedAt()).isNull(),
                 o -> Assertions.assertThat(o.paidAt()).isNull(),
@@ -36,7 +36,7 @@ class OrderTest {
                 o -> Assertions.assertThat(o.shipping()).isNull(),
                 o -> Assertions.assertThat(o.paymentMethod()).isNull()
 
-                );
+        );
     }
 
     @Test
@@ -57,7 +57,7 @@ class OrderTest {
                 (i) -> Assertions.assertThat(i.productId()).isEqualTo(productId),
                 (i) -> Assertions.assertThat(i.price()).isEqualTo(new Money("100")),
                 (i) -> Assertions.assertThat(i.quantity()).isEqualTo(new Quantity(1))
-            );
+        );
     }
 
     @Test
@@ -169,7 +169,7 @@ class OrderTest {
         Assertions.assertWith(order,
                 (o) -> Assertions.assertThat(o.totalAmount()).isEqualTo(new Money("500")),
                 (o) -> Assertions.assertThat(o.totalItems()).isEqualTo(new Quantity(5))
-                );
+        );
     }
 
     @Test
