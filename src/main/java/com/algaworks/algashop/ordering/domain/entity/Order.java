@@ -102,18 +102,18 @@ public class Order {
 
     public void place() {
         this.verifyIfCanChangeToPlaced();
-        this.setPlacedAt(OffsetDateTime.now());
         this.changeStatus(OrderStatus.PLACED);
+        this.setPlacedAt(OffsetDateTime.now());
     }
 
     public void markAsPaid() {
-        this.setPaidAt(OffsetDateTime.now());
         this.changeStatus(OrderStatus.PAID);
+        this.setPaidAt(OffsetDateTime.now());
     }
 
     public void markAsReady() {
-        this.setReadyAt(OffsetDateTime.now());
         this.changeStatus(OrderStatus.READY);
+        this.setReadyAt(OffsetDateTime.now());
     }
 
     public void changePaymentMethod(PaymentMethod paymentMethod) {

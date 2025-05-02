@@ -45,15 +45,15 @@ class OrderMarkAsReadyTest {
     }
 
     @Test
-    void givenCanceledOrder_whenMarkAsReady_shouldThrowExceptionAndNotChangeState() {
-        Order order = OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).build();
+    void givenReadyOrder_whenMarkAsReady_shouldThrowExceptionAndNotChangeState() {
+        Order order = OrderTestDataBuilder.anOrder().status(OrderStatus.READY).build();
 
         Assertions.assertThatExceptionOfType(OrderStatusCannotBeChangedException.class)
                 .isThrownBy(order::markAsReady);
 
         Assertions.assertWith(order,
-                (o) -> Assertions.assertThat(o.status()).isEqualTo(OrderStatus.CANCELED),
-                (o) -> Assertions.assertThat(o.readyAt()).isNull()
+                (o) -> Assertions.assertThat(o.status()).isEqualTo(OrderStatus.READY),
+                (o) -> Assertions.assertThat(o.readyAt()).isNotNull()
         );
     }
 }
