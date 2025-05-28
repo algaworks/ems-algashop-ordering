@@ -26,7 +26,7 @@ class OrderPersistenceEntityRepositoryIT {
 
     @Test
     public void shouldPersist() {
-        long orderId = IdGenerator.gererateTSID().toLong();
+        long orderId = IdGenerator.generateTSID().toLong();
         OrderPersistenceEntity entity = OrderPersistenceEntity.builder()
                 .id(orderId)
                 .customerId(IdGenerator.generateTimeBasedUUID())
