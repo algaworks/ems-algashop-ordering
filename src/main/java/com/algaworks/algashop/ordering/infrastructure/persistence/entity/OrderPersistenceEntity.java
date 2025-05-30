@@ -42,8 +42,10 @@ public class OrderPersistenceEntity {
 
     @CreatedBy
     private UUID createdByUserId;
+
     @LastModifiedDate
     private OffsetDateTime lastModifiedAt;
+
     @LastModifiedBy
     private UUID lastModifiedByUserId;
 
