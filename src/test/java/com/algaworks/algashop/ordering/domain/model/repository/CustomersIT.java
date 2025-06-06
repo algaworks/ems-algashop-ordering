@@ -110,4 +110,14 @@ class CustomersIT {
         Assertions.assertThat(customers.exists(new CustomerId())).isFalse();
     }
 
+    @Test
+    public void shouldFindByEmail() {
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+        customers.add(customer);
+
+        Optional<Customer> customerOptional = customers.ofEmail(customer.email());
+
+        Assertions.assertThat(customerOptional).isPresent();
+    }
+
  }
