@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.domain.model.entity;
 
 import com.algaworks.algashop.ordering.domain.model.exception.ShoppingCartDoesNotContainItemException;
+import com.algaworks.algashop.ordering.domain.model.exception.ShoppingCartDoesNotContainProductException;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Money;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Product;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Quantity;
@@ -80,14 +81,17 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
                 .orElseThrow(() -> new ShoppingCartDoesNotContainItemException(this.id(), shoppingCartItemId));
     }
 
-    public void changeItemAvailability(ShoppingCartItemId shoppingCartItemId, Boolean inStock) {
-        ShoppingCartItem shoppingCartItem = this.findItem(shoppingCartItemId);
-        shoppingCartItem.changeAvailability(inStock);
+    public ShoppingCartItem findItem(ProductId productId) {
+        Objects.requireNonNull(productId);
+        return this.items.stream()
+                .filter(i -> i.productId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new ShoppingCartDoesNotContainProductException(this.id(), productId));
     }
 
-    public void changeItemPrice(ShoppingCartItemId shoppingCartItemId, Money price) {
-        ShoppingCartItem shoppingCartItem = this.findItem(shoppingCartItemId);
-        shoppingCartItem.changePrice(price);
+    public void refreshItem(Product product) {
+        ShoppingCartItem shoppingCartItem = this.findItem(product.id());
+        shoppingCartItem.refresh(product);
         this.recalculateTotals();
     }
 
@@ -130,8 +134,7 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
     }
 
     private void updateItem(ShoppingCartItem shoppingCartItem, Product product, Quantity quantity) {
-        shoppingCartItem.changeAvailability(product.inStock());
-        shoppingCartItem.changePrice(product.price());
+        shoppingCartItem.refresh(product);
         shoppingCartItem.changeQuantity(shoppingCartItem.quantity().add(quantity));
     }
 

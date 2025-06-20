@@ -1,6 +1,8 @@
 package com.algaworks.algashop.ordering.domain.model.entity;
 
+import com.algaworks.algashop.ordering.domain.model.exception.ShoppingCartItemIncompatibleProductException;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Money;
+import com.algaworks.algashop.ordering.domain.model.valueobject.Product;
 import com.algaworks.algashop.ordering.domain.model.valueobject.ProductName;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Quantity;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.ProductId;
@@ -41,18 +43,23 @@ public class ShoppingCartItem {
 		this.recalculateTotals();
 	}
 
+	void refresh(Product product) {
+		Objects.requireNonNull(product);
+		Objects.requireNonNull(product.id());
+
+		if (product.id().equals(this.productId())) {
+			throw new ShoppingCartItemIncompatibleProductException(this.id(), this.productId());
+		}
+
+		this.setPrice(product.price());
+		this.setAvailable(product.inStock());
+		this.setProductName(product.name());
+		this.recalculateTotals();
+	}
+
 	void changeQuantity(Quantity quantity) {
 		this.setQuantity(quantity);
 		this.recalculateTotals();
-	}
-
-	void changePrice(Money price) {
-		this.setPrice(price);
-		this.recalculateTotals();
-	}
-
-	void changeAvailability(Boolean inStock) {
-		this.setAvailable(inStock);
 	}
 
 	private void recalculateTotals() {
@@ -146,4 +153,5 @@ public class ShoppingCartItem {
 	public int hashCode() {
 		return Objects.hash(id);
 	}
+
 }

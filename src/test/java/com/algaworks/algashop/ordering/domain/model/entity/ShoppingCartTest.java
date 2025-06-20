@@ -98,9 +98,10 @@ class ShoppingCartTest {
     @Test
     void givenCartWithItems_whenChangeItemPrice_shouldRecalculateTotalAmount() {
         ShoppingCart cart = ShoppingCartTestDataBuilder.aShoppingCart().build();
-        var item = cart.items().iterator().next();
 
-        cart.changeItemPrice(item.id(), new Money("500"));
+        Product product = ProductTestDataBuilder.aProduct().build();
+        cart.refreshItem(product);
+        var item = cart.findItem(product.id());
 
         Assertions.assertThat(cart.items().stream()
                 .filter(i -> i.id().equals(item.id()))
@@ -115,9 +116,8 @@ class ShoppingCartTest {
     @Test
     void givenCartWithItems_whenDetectUnavailableItems_shouldReturnTrue() {
         ShoppingCart cart = ShoppingCartTestDataBuilder.aShoppingCart().build();
-        var item = cart.items().iterator().next();
-
-        cart.changeItemAvailability(item.id(), false);
+        Product product = ProductTestDataBuilder.aProduct().inStock(false).build();
+        cart.refreshItem(product);
 
         Assertions.assertThat(cart.containsUnavailableItems()).isTrue();
     }
