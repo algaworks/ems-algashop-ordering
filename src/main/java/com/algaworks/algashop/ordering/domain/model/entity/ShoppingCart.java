@@ -41,9 +41,9 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
     }
 
     public void empty() {
-        for (ShoppingCartItem item : new HashSet<>(items)) {
-            removeItem(item.id());
-        }
+        items.clear();
+        totalAmount = Money.ZERO;
+        totalItems = Quantity.ZERO;
     }
 
     public void removeItem(ShoppingCartItemId shoppingCartItemId) {

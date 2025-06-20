@@ -47,7 +47,7 @@ public class ShoppingCartItem {
 		Objects.requireNonNull(product);
 		Objects.requireNonNull(product.id());
 
-		if (product.id().equals(this.productId())) {
+		if (!product.id().equals(this.productId())) {
 			throw new ShoppingCartItemIncompatibleProductException(this.id(), this.productId());
 		}
 
