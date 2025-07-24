@@ -25,8 +25,8 @@ class CheckoutServiceTest {
     @Test
     void givenValidShoppingCart_whenCheckout_shouldReturnPlacedOrderAndEmptyShoppingCart() {
         ShoppingCart shoppingCart = ShoppingCart.startShopping(ShoppingCartTestDataBuilder.aShoppingCart().customerId);
-        shoppingCart.addItem(ProductTestDataBuilder.aProduct().inStock(true).build(), new Quantity(2));
-        shoppingCart.addItem(ProductTestDataBuilder.aProductAltRamMemory().inStock(true).build(), new Quantity(1));
+        shoppingCart.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(2));
+        shoppingCart.addItem(ProductTestDataBuilder.aProductAltRamMemory().build(), new Quantity(1));
 
         Billing billingInfo = OrderTestDataBuilder.aBilling();
         Shipping shippingInfo = OrderTestDataBuilder.aShipping();
@@ -59,10 +59,10 @@ class CheckoutServiceTest {
     @Test
     void givenShoppingCartWithUnavailableItems_whenCheckout_shouldThrowShoppingCartCantProceedToCheckoutException() {
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
-        Product product = ProductTestDataBuilder.aProduct().inStock(true).build();
+        Product product = ProductTestDataBuilder.aProduct().build();
         shoppingCart.addItem(product, new Quantity(1));
 
-        Product productUnavailable = ProductTestDataBuilder.aProduct().id(product.id()).inStock(false).build();
+        Product productUnavailable = ProductTestDataBuilder.aProduct().inStock(false).build();
         shoppingCart.refreshItem(productUnavailable);
 
         Billing billingInfo = OrderTestDataBuilder.aBilling();
@@ -92,13 +92,13 @@ class CheckoutServiceTest {
     @Test
     void givenShoppingCartWithUnavailableItems_whenCheckout_shouldNotModifyShoppingCartState() {
         ShoppingCart shoppingCart = ShoppingCart.startShopping(ShoppingCartTestDataBuilder.aShoppingCart().customerId);
-        Product productInStock = ProductTestDataBuilder.aProduct().inStock(true).build();
+        Product productInStock = ProductTestDataBuilder.aProduct().build();
         shoppingCart.addItem(productInStock, new Quantity(2));
 
         Money initialTotalAmount = shoppingCart.totalAmount();
         Quantity initialTotalItems = shoppingCart.totalItems();
 
-        Product productAlt = ProductTestDataBuilder.aProductAltRamMemory().id(new ProductId()).inStock(true).build();
+        Product productAlt = ProductTestDataBuilder.aProductAltRamMemory().build();
         shoppingCart.addItem(productAlt, new Quantity(1));
 
         Product productAltUnavailable = ProductTestDataBuilder.aProductAltRamMemory().id(productAlt.id()).inStock(false).build();
