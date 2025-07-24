@@ -4,7 +4,6 @@ import com.algaworks.algashop.ordering.domain.model.entity.*;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Money;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Product;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Quantity;
-import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.ProductId;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceEntityAssembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.ShoppingCartPersistenceEntityAssembler;
@@ -21,9 +20,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @DataJpaTest
 @Import({
