@@ -38,7 +38,7 @@ public class ProductTestDataBuilder {
 
     public static Product.ProductBuilder aProductAltMousePad() {
         return Product.builder()
-                .id(DEFAULT_PRODUCT_ID)
+                .id(new ProductId())
                 .name(new ProductName("Mouse Pad"))
                 .price(new Money("100"))
                 .inStock(true);
