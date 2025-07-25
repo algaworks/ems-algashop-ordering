@@ -2,6 +2,7 @@ package com.algaworks.algashop.ordering.domain.model.service;
 
 import com.algaworks.algashop.ordering.domain.model.service.ShippingCostService.CalculationRequest;
 import com.algaworks.algashop.ordering.domain.model.valueobject.ZipCode;
+import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ class ShippingCostServiceIT {
         var calculate = shippingCostService
                 .calculate(new CalculationRequest(origin, destination));
 
-        Assumptions.assumeThat(calculate.cost()).isNotNull();
-        Assumptions.assumeThat(calculate.expectedDate()).isNotNull();
+        Assertions.assertThat(calculate.cost()).isNotNull();
+        Assertions.assertThat(calculate.expectedDate()).isNotNull();
     }
   
 }
