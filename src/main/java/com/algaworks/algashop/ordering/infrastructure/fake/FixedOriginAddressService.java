@@ -1,8 +1,8 @@
 package com.algaworks.algashop.ordering.infrastructure.fake;
 
-import com.algaworks.algashop.ordering.domain.model.service.OriginAddressService;
-import com.algaworks.algashop.ordering.domain.model.valueobject.Address;
-import com.algaworks.algashop.ordering.domain.model.valueobject.ZipCode;
+import com.algaworks.algashop.ordering.domain.model.order.shipping.OriginAddressService;
+import com.algaworks.algashop.ordering.domain.model.commons.Address;
+import com.algaworks.algashop.ordering.domain.model.commons.ZipCode;
 import org.springframework.stereotype.Component;
 
 @Component
