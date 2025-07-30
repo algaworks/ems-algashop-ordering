@@ -46,6 +46,8 @@ class CustomerManagementApplicationServiceIT {
         Assertions.assertThat(customerOutput.getId()).isEqualTo(customerId);
         Assertions.assertThat(customerOutput.getFirstName()).isEqualTo("John");
         Assertions.assertThat(customerOutput.getLastName()).isEqualTo("Doe");
+        Assertions.assertThat(customerOutput.getEmail()).isEqualTo("johndoe@email.com");
+        Assertions.assertThat(customerOutput.getBirthDate()).isEqualTo(LocalDate.of(1991, 7,5));
     }
 
 }
