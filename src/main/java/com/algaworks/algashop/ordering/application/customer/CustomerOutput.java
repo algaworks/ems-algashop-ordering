@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.util.UUID;
 
@@ -23,10 +22,10 @@ public class CustomerOutput {
     private String phone;
     private String document;
     private LocalDate birthDate;
-    private Boolean promotionNotificationsAllowed;
+    private Boolean promotionsNotificationsAllowed;
     private AddressData address;
     private Integer loyaltyPoints;
-    private OffsetDateTime registeredAt;
-    private OffsetDateTime archivedAt;
+    private OffsetTime registeredAt;
+    private OffsetTime archivedAt;
     private Boolean archived;
 }
