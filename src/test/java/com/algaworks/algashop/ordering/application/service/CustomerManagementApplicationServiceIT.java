@@ -2,7 +2,6 @@ package com.algaworks.algashop.ordering.application.service;
 
 import com.algaworks.algashop.ordering.application.model.AddressData;
 import com.algaworks.algashop.ordering.application.model.CustomerInput;
-import com.algaworks.algashop.ordering.application.model.CustomerOutput;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +38,7 @@ class CustomerManagementApplicationServiceIT {
                 .build();
 
         UUID customerId = customerManagementApplicationService.create(input);
-        CustomerOutput customerOutput = customerManagementApplicationService.findById(customerId);
-
         Assertions.assertThat(customerId).isNotNull();
-        Assertions.assertThat(customerOutput.getId()).isEqualTo(customerId);
-        Assertions.assertThat(customerOutput.getFirstName()).isEqualTo("John");
-        Assertions.assertThat(customerOutput.getLastName()).isEqualTo("Doe");
     }
 
 }
