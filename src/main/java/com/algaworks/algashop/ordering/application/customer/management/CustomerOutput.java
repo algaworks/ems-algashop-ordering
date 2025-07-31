@@ -1,5 +1,6 @@
-package com.algaworks.algashop.ordering.application.model;
+package com.algaworks.algashop.ordering.application.customer.management;
 
+import com.algaworks.algashop.ordering.application.commons.AddressData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.time.OffsetTime;
 import java.util.UUID;
 
 @Data

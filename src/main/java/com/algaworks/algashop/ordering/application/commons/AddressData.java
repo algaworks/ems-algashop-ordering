@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.application.model;
+package com.algaworks.algashop.ordering.application.commons;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
