@@ -1,18 +1,11 @@
-package com.algaworks.algashop.ordering.application.service.customer.management;
+package com.algaworks.algashop.ordering.application.customer.management;
 
-import com.algaworks.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
-import com.algaworks.algashop.ordering.application.commons.AddressData;
-import com.algaworks.algashop.ordering.application.customer.management.CustomerInput;
-import com.algaworks.algashop.ordering.application.customer.management.CustomerOutput;
-import com.algaworks.algashop.ordering.application.customer.management.CustomerUpdateInput;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerArchivedException;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerNotFoundException;
-import com.algaworks.algashop.ordering.domain.model.product.ProductCatalogService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;

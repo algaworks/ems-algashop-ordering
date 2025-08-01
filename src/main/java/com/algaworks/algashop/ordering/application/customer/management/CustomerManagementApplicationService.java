@@ -17,7 +17,6 @@ public class CustomerManagementApplicationService {
 
     private final CustomerRegistrationService customerRegistration;
     private final Customers customers;
-
     private final Mapper mapper;
 
     @Transactional
@@ -95,6 +94,15 @@ public class CustomerManagementApplicationService {
         Customer customer = customers.ofId(new CustomerId(rawCustomerId))
                 .orElseThrow(()-> new CustomerNotFoundException());
         customer.archive();
+        customers.add(customer);
+    }
+
+    @Transactional
+    public void changeEmail(UUID rawCustomerId, String newEmail) {
+        CustomerId customerId = new CustomerId(rawCustomerId);
+        Customer customer = customers.ofId(new CustomerId(rawCustomerId))
+                .orElseThrow(()-> new CustomerNotFoundException());
+        customerRegistration.changeEmail(customer, new Email(newEmail));
         customers.add(customer);
     }
 
