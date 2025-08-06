@@ -15,6 +15,7 @@ public class CheckoutService {
 						  Billing billing,
 						  Shipping shipping,
 						  PaymentMethod paymentMethod) {
+
 		if (shoppingCart.isEmpty()) {
 			throw new ShoppingCartCantProceedToCheckoutException();
 		}
