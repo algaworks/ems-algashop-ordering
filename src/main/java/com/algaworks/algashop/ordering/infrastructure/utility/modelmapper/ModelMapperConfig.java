@@ -1,6 +1,6 @@
 package com.algaworks.algashop.ordering.infrastructure.utility.modelmapper;
 
-import com.algaworks.algashop.ordering.application.customer.management.CustomerOutput;
+import com.algaworks.algashop.ordering.application.customer.query.CustomerOutput;
 import com.algaworks.algashop.ordering.application.utility.Mapper;
 import com.algaworks.algashop.ordering.domain.model.commons.FullName;
 import com.algaworks.algashop.ordering.domain.model.customer.BirthDate;
@@ -9,8 +9,6 @@ import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.convention.NamingConventions;
-import org.modelmapper.spi.MappingContext;
-import org.modelmapper.spi.NamingConvention;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
