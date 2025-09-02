@@ -2,6 +2,7 @@ package com.algaworks.algashop.ordering.presentation;
 
 import com.algaworks.algashop.ordering.application.customer.management.CustomerInput;
 import com.algaworks.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
+import com.algaworks.algashop.ordering.application.customer.management.CustomerUpdateInput;
 import com.algaworks.algashop.ordering.application.customer.query.CustomerFilter;
 import com.algaworks.algashop.ordering.application.customer.query.CustomerOutput;
 import com.algaworks.algashop.ordering.application.customer.query.CustomerQueryService;
@@ -45,6 +46,19 @@ public class CustomerController {
     @GetMapping("/{customerId}")
     public CustomerOutput findById(@PathVariable UUID customerId) {
         return customerQueryService.findById(customerId);
+    }
+
+    @PutMapping("/{customerId}")
+    public CustomerOutput update(@PathVariable UUID customerId,
+                                 @RequestBody @Valid CustomerUpdateInput input) {
+        customerManagementApplicationService.update(customerId, input);
+        return customerQueryService.findById(customerId);
+    }
+
+    @DeleteMapping("/{customerId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable UUID customerId) {
+        customerManagementApplicationService.archive(customerId);
     }
 
 }
