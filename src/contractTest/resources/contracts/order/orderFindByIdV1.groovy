@@ -1,4 +1,4 @@
-package contract.order
+package contracts.order
 
 import org.springframework.cloud.contract.spec.Contract
 
