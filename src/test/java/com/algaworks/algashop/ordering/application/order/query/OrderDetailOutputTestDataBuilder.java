@@ -17,6 +17,7 @@ public class OrderDetailOutputTestDataBuilder {
     public static OrderDetailOutput.OrderDetailOutputBuilder placedOrder() {
         return placedOrder(new OrderId().toString());
     }
+
     public static OrderDetailOutput.OrderDetailOutputBuilder placedOrder(String orderId) {
         return OrderDetailOutput.builder()
                 .id(orderId)
@@ -82,7 +83,7 @@ public class OrderDetailOutputTestDataBuilder {
                 .productName("Notebook Dive Gamer X11")
                 .price(new BigDecimal("19.99"))
                 .quantity(2)
-                .totalAmount(new BigDecimal("19.99"))
+                .totalAmount(new BigDecimal("41.98"))
                 .build());
         return items;
     }

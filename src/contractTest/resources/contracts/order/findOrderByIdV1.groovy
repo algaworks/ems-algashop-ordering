@@ -72,7 +72,7 @@ Contract.make {
                             price: 19.99,
                             productName: "Notebook Dive Gamer X11",
                             quantity: 2,
-                            totalAmount: 19.99
+                            totalAmount: 41.98
                     ]
             ]
         ])
