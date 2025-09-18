@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.presentation;
+package com.algaworks.algashop.ordering.presentation.shoppingcart;
 
 import com.algaworks.algashop.ordering.application.shoppingcart.management.ShoppingCartItemInput;
 import com.algaworks.algashop.ordering.application.shoppingcart.management.ShoppingCartManagementApplicationService;

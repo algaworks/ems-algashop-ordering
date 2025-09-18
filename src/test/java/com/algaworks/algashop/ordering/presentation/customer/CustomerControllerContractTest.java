@@ -1,19 +1,16 @@
-package com.algaworks.algashop.ordering.presentation;
+package com.algaworks.algashop.ordering.presentation.customer;
 
 import com.algaworks.algashop.ordering.application.commons.AddressData;
 import com.algaworks.algashop.ordering.application.customer.management.CustomerInput;
 import com.algaworks.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
-import com.algaworks.algashop.ordering.application.customer.management.CustomerUpdateInput;
 import com.algaworks.algashop.ordering.application.customer.query.*;
 import com.algaworks.algashop.ordering.domain.model.DomainException;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerEmailIsInUseException;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerNotFoundException;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -25,7 +22,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;

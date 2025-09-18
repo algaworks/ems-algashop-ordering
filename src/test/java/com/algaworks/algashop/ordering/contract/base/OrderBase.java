@@ -4,15 +4,11 @@ import com.algaworks.algashop.ordering.application.checkout.BuyNowApplicationSer
 import com.algaworks.algashop.ordering.application.checkout.BuyNowInput;
 import com.algaworks.algashop.ordering.application.checkout.CheckoutApplicationService;
 import com.algaworks.algashop.ordering.application.checkout.CheckoutInput;
-import com.algaworks.algashop.ordering.application.customer.management.CustomerInput;
 import com.algaworks.algashop.ordering.application.order.query.*;
 import com.algaworks.algashop.ordering.domain.model.order.OrderNotFoundException;
-import com.algaworks.algashop.ordering.presentation.OrderController;
-import com.algaworks.algashop.ordering.presentation.PageModel;
+import com.algaworks.algashop.ordering.presentation.order.OrderController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
-import org.hibernate.query.Page;
 import org.junit.jupiter.api.BeforeEach;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
