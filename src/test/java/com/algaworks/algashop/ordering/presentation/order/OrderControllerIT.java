@@ -21,6 +21,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner;
+import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -30,6 +32,8 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import static io.restassured.config.JsonConfig.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@AutoConfigureStubRunner(stubsMode = StubRunnerProperties.StubsMode.LOCAL,
+//        ids = "com.algaworks.algashop:product-catalog:0.0.1-SNAPSHOT:8781")
 public class OrderControllerIT {
 
     @LocalServerPort
@@ -69,6 +73,7 @@ public class OrderControllerIT {
                     .extensions(new ResponseTemplateTransformer(true)));
 
         wireMockRapidex.start();
+
         wireMockProductCatalog.start();
 
     }
