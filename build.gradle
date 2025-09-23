@@ -1,9 +1,17 @@
+buildscript {
+	dependencies {
+		classpath 'org.flywaydb:flyway-core:11.13.0'
+		classpath 'org.flywaydb:flyway-database-postgresql:11.13.0'
+	}
+}
+
 plugins {
 	id 'idea'
 	id 'java'
 	id 'org.springframework.boot' version '3.5.5'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'org.springframework.cloud.contract' version '4.3.0'
+	id 'org.flywaydb.flyway' version '11.13.0'
 }
 
 group = 'com.algaworks.algashop'
