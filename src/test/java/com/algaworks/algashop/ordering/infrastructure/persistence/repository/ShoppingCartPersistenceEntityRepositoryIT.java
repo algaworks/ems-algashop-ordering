@@ -1,5 +1,6 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.repository;
 
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.algaworks.algashop.ordering.infrastructure.persistence.SpringDataAuditingConfig;
 import com.algaworks.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity;
@@ -15,18 +16,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.UUID;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(SpringDataAuditingConfig.class)
+@TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
 class ShoppingCartPersistenceEntityRepositoryIT {
 
     private final ShoppingCartPersistenceEntityRepository shoppingCartPersistenceEntityRepository;
     private final CustomerPersistenceEntityRepository customerPersistenceEntityRepository;
 
     private CustomerPersistenceEntity customerPersistenceEntity;
+
+    private UUID customerIdWithoutShoppingCart = UUID.fromString("3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d");
 
     @Autowired
     public ShoppingCartPersistenceEntityRepositoryIT(ShoppingCartPersistenceEntityRepository shoppingCartPersistenceEntityRepository,
@@ -37,12 +42,8 @@ class ShoppingCartPersistenceEntityRepositoryIT {
 
     @BeforeEach
     public void setup() {
-        UUID customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID.value();
-        if (!customerPersistenceEntityRepository.existsById(customerId)) {
-            customerPersistenceEntity = customerPersistenceEntityRepository.saveAndFlush(
-                    CustomerPersistenceEntityTestDataBuilder.aCustomer().build()
-            );
-        }
+        customerPersistenceEntity = customerPersistenceEntityRepository
+                .getReferenceById(customerIdWithoutShoppingCart);
     }
 
     @Test
@@ -62,7 +63,7 @@ class ShoppingCartPersistenceEntityRepositoryIT {
     @Test
     public void shouldCount() {
         long shoppingCartsCount = shoppingCartPersistenceEntityRepository.count();
-        Assertions.assertThat(shoppingCartsCount).isZero();
+        Assertions.assertThat(shoppingCartsCount).isEqualTo(2L);
     }
 
     @Test

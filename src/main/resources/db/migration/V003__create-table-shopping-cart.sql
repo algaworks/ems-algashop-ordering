@@ -8,6 +8,7 @@ create table public.shopping_cart (
 	total_items integer,
 	version bigint,
 	customer_id uuid not null,
+    constraint uq_shopping_cart_customer_id unique (customer_id),
 	primary key (id)
 );
 

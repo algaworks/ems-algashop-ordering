@@ -1,5 +1,6 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.provider;
 
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
@@ -18,15 +19,19 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.shoppingcart.S
 import com.algaworks.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceEntityRepository;
 import com.algaworks.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartUpdateProvider;
 import com.algaworks.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartsPersistenceProvider;
+import com.algaworks.algashop.ordering.utils.AbstractAutoCleanableIT;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @DataJpaTest
 @Import({
@@ -39,14 +44,17 @@ import org.springframework.transaction.annotation.Transactional;
         CustomerPersistenceEntityDisassembler.class,
         SpringDataAuditingConfig.class
 })
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class ShoppingCartUpdateProviderIT {
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
+class ShoppingCartUpdateProviderIT extends AbstractAutoCleanableIT {
 
     private ShoppingCartsPersistenceProvider persistenceProvider;
     private CustomersPersistenceProvider customersPersistenceProvider;
     private ShoppingCartPersistenceEntityRepository entityRepository;
 
     private ShoppingCartUpdateProvider shoppingCartUpdateProvider;
+
+    private UUID customerIdWithoutShoppingCart = UUID.fromString("3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d");
 
     @Autowired
     public ShoppingCartUpdateProviderIT(ShoppingCartsPersistenceProvider persistenceProvider,
@@ -59,19 +67,12 @@ class ShoppingCartUpdateProviderIT {
         this.shoppingCartUpdateProvider = shoppingCartUpdateProvider;
     }
 
-    @BeforeEach
-    public void setup() {
-        if (!customersPersistenceProvider.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)) {
-            customersPersistenceProvider.add(
-                    CustomerTestDataBuilder.existingCustomer().build()
-            );
-        }
-    }
-
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void shouldUpdateItemPriceAndTotalAmount() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart()
+                .customerId(new CustomerId(customerIdWithoutShoppingCart))
+                .withItems(false).build();
 
         Product product1 = ProductTestDataBuilder.aProduct().price(new Money("2000")).build();
         Product product2 = ProductTestDataBuilder.aProductAltRamMemory().price(new Money("200")).build();
@@ -103,7 +104,9 @@ class ShoppingCartUpdateProviderIT {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void shouldUpdateItemAvailability() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart()
+                .customerId(new CustomerId(customerIdWithoutShoppingCart))
+                .withItems(false).build();
 
         Product product1 = ProductTestDataBuilder.aProduct()
                 .price(new Money("2000"))

@@ -10,13 +10,16 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.customer.Custo
 import com.algaworks.algashop.ordering.infrastructure.persistence.order.OrderPersistenceEntityDisassembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.customer.CustomersPersistenceProvider;
 import com.algaworks.algashop.ordering.infrastructure.persistence.order.OrdersPersistenceProvider;
+import com.algaworks.algashop.ordering.utils.AbstractAutoCleanableIT;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.test.context.TestPropertySource;
 
 import java.time.Year;
 import java.util.List;
@@ -25,15 +28,15 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import({
-        OrdersPersistenceProvider.class,
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import({OrdersPersistenceProvider.class,
         OrderPersistenceEntityAssembler.class,
         OrderPersistenceEntityDisassembler.class,
         CustomersPersistenceProvider.class,
         CustomerPersistenceEntityAssembler.class,
-        CustomerPersistenceEntityDisassembler.class
-})
-class OrdersIT {
+        CustomerPersistenceEntityDisassembler.class})
+@TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
+class OrdersIT extends AbstractAutoCleanableIT {
 
     private Orders orders;
     private Customers customers;
@@ -42,15 +45,6 @@ class OrdersIT {
     public OrdersIT(Orders orders, Customers customers) {
         this.orders = orders;
         this.customers = customers;
-    }
-
-    @BeforeEach
-    public void setup() {
-        if (!customers.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)) {
-            customers.add(
-                    CustomerTestDataBuilder.existingCustomer().build()
-            );
-        }
     }
 
     @Test
@@ -120,15 +114,7 @@ class OrdersIT {
 
     @Test
     public void shouldCountExistingOrders() {
-        Assertions.assertThat(orders.count()).isZero();
-
-        Order order1 = OrderTestDataBuilder.anOrder().build();
-        Order order2 = OrderTestDataBuilder.anOrder().build();
-
-        orders.add(order1);
-        orders.add(order2);
-
-        Assertions.assertThat(orders.count()).isEqualTo(2L);
+        Assertions.assertThat(orders.count()).isEqualTo(6L);
     }
 
     @Test

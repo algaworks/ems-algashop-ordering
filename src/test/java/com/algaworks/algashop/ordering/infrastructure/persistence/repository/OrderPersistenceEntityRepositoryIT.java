@@ -8,6 +8,7 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.entity.Custome
 import com.algaworks.algashop.ordering.infrastructure.persistence.order.OrderPersistenceEntity;
 import com.algaworks.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;
 import com.algaworks.algashop.ordering.infrastructure.persistence.order.OrderPersistenceEntityRepository;
+import com.algaworks.algashop.ordering.utils.AbstractAutoCleanableIT;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,13 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.UUID;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(SpringDataAuditingConfig.class)
-class OrderPersistenceEntityRepositoryIT {
+@TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
+class OrderPersistenceEntityRepositoryIT extends AbstractAutoCleanableIT {
 
     private final OrderPersistenceEntityRepository orderPersistenceEntityRepository;
     private final CustomerPersistenceEntityRepository customerPersistenceEntityRepository;
@@ -33,16 +36,8 @@ class OrderPersistenceEntityRepositoryIT {
                                               CustomerPersistenceEntityRepository customerPersistenceEntityRepository) {
         this.orderPersistenceEntityRepository = orderPersistenceEntityRepository;
         this.customerPersistenceEntityRepository = customerPersistenceEntityRepository;
-    }
 
-    @BeforeEach
-    public void setup() {
-        UUID customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID.value();
-        if (!customerPersistenceEntityRepository.existsById(customerId)) {
-            customerPersistenceEntity = customerPersistenceEntityRepository.saveAndFlush(
-                    CustomerPersistenceEntityTestDataBuilder.aCustomer().build()
-            );
-        }
+        customerPersistenceEntity = customerPersistenceEntityRepository.getReferenceById(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID.value());
     }
 
     @Test
@@ -62,7 +57,7 @@ class OrderPersistenceEntityRepositoryIT {
     @Test
     public void shouldCount() {
         long ordersCount = orderPersistenceEntityRepository.count();
-        Assertions.assertThat(ordersCount).isZero();
+        Assertions.assertThat(ordersCount).isEqualTo(6L);
     }
 
     @Test

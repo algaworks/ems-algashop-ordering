@@ -13,16 +13,20 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.customer.Custo
 import com.algaworks.algashop.ordering.infrastructure.persistence.order.OrderPersistenceEntityDisassembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.order.OrderPersistenceEntityRepository;
 import com.algaworks.algashop.ordering.infrastructure.persistence.order.OrdersPersistenceProvider;
+import com.algaworks.algashop.ordering.utils.AbstractAutoCleanableIT;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import({
         OrdersPersistenceProvider.class,
         OrderPersistenceEntityAssembler.class,
@@ -32,7 +36,8 @@ import org.springframework.transaction.annotation.Transactional;
         CustomerPersistenceEntityDisassembler.class,
         SpringDataAuditingConfig.class
 })
-class OrdersPersistenceProviderIT {
+@TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
+class OrdersPersistenceProviderIT extends AbstractAutoCleanableIT {
 
     private OrdersPersistenceProvider persistenceProvider;
     private CustomersPersistenceProvider customersPersistenceProvider;
@@ -45,15 +50,6 @@ class OrdersPersistenceProviderIT {
         this.persistenceProvider = persistenceProvider;
         this.customersPersistenceProvider = customersPersistenceProvider;
         this.entityRepository = entityRepository;
-    }
-
-    @BeforeEach
-    public void setup() {
-        if (!customersPersistenceProvider.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)) {
-            customersPersistenceProvider.add(
-                    CustomerTestDataBuilder.existingCustomer().build()
-            );
-        }
     }
 
     @Test

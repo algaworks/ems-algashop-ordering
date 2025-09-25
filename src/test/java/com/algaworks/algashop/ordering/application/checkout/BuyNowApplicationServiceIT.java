@@ -9,12 +9,14 @@ import com.algaworks.algashop.ordering.domain.model.order.shipping.ShippingCostS
 import com.algaworks.algashop.ordering.domain.model.product.Product;
 import com.algaworks.algashop.ordering.domain.model.product.ProductCatalogService;
 import com.algaworks.algashop.ordering.domain.model.product.ProductTestDataBuilder;
+import com.algaworks.algashop.ordering.utils.AbstractAutoCleanableIT;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +25,8 @@ import java.util.Optional;
 
 @SpringBootTest
 @Transactional
-class BuyNowApplicationServiceIT {
+@TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
+class BuyNowApplicationServiceIT extends AbstractAutoCleanableIT {
 
     @Autowired
     private BuyNowApplicationService buyNowApplicationService;
@@ -39,13 +42,6 @@ class BuyNowApplicationServiceIT {
 
     @MockitoBean
     private ShippingCostService shippingCostService;
-
-    @BeforeEach
-    public void setup() {
-        if (!customers.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)) {
-            customers.add(CustomerTestDataBuilder.existingCustomer().build());
-        }
-    }
 
     @Test
     public void shouldBuyNow() {

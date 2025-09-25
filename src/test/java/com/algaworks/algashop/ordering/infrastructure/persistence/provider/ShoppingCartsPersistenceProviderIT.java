@@ -13,13 +13,18 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.customer.Custo
 import com.algaworks.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceEntityDisassembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceEntityRepository;
 import com.algaworks.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartsPersistenceProvider;
+import com.algaworks.algashop.ordering.utils.AbstractAutoCleanableIT;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -34,11 +39,15 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
         CustomerPersistenceEntityDisassembler.class,
         SpringDataAuditingConfig.class
 })
-class ShoppingCartsPersistenceProviderIT {
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
+class ShoppingCartsPersistenceProviderIT extends AbstractAutoCleanableIT {
 
     private ShoppingCartsPersistenceProvider persistenceProvider;
     private CustomersPersistenceProvider customersPersistenceProvider;
     private ShoppingCartPersistenceEntityRepository entityRepository;
+
+    private UUID customerIdWithoutShoppingCart = UUID.fromString("3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d");
 
     @Autowired
     public ShoppingCartsPersistenceProviderIT(ShoppingCartsPersistenceProvider persistenceProvider,
@@ -49,18 +58,11 @@ class ShoppingCartsPersistenceProviderIT {
         this.entityRepository = entityRepository;
     }
 
-    @BeforeEach
-    public void setup() {
-        if (!customersPersistenceProvider.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)) {
-            customersPersistenceProvider.add(
-                    CustomerTestDataBuilder.existingCustomer().build()
-            );
-        }
-    }
-
     @Test
     public void shouldAddAndFindShoppingCart() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart()
+                .customerId(new CustomerId(customerIdWithoutShoppingCart))
+                .build();
         assertThat(shoppingCart.version()).isNull();
 
         persistenceProvider.add(shoppingCart);
@@ -75,7 +77,9 @@ class ShoppingCartsPersistenceProviderIT {
 
     @Test
     public void shouldRemoveShoppingCartById() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart()
+                .customerId(new CustomerId(customerIdWithoutShoppingCart))
+                .build();
         persistenceProvider.add(shoppingCart);
         assertThat(persistenceProvider.exists(shoppingCart.id())).isTrue();
 
@@ -87,7 +91,9 @@ class ShoppingCartsPersistenceProviderIT {
     
     @Test
     public void shouldRemoveShoppingCartByEntity() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart()
+                .customerId(new CustomerId(customerIdWithoutShoppingCart))
+                .build();
         persistenceProvider.add(shoppingCart);
         assertThat(persistenceProvider.exists(shoppingCart.id())).isTrue();
 
@@ -98,15 +104,16 @@ class ShoppingCartsPersistenceProviderIT {
 
     @Test
     public void shouldFindShoppingCartByCustomerId() {
+        CustomerId customerId = new CustomerId(customerIdWithoutShoppingCart);
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart()
-                .customerId(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)
+                .customerId(customerId)
                 .build();
         persistenceProvider.add(shoppingCart);
 
-        ShoppingCart foundCart = persistenceProvider.ofCustomer(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID).orElseThrow();
+        ShoppingCart foundCart = persistenceProvider.ofCustomer(customerId).orElseThrow();
 
         assertThat(foundCart).isNotNull();
-        assertThat(foundCart.customerId()).isEqualTo(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID);
+        assertThat(foundCart.customerId()).isEqualTo(customerId);
         assertThat(foundCart.id()).isEqualTo(shoppingCart.id());
     }
 
@@ -114,10 +121,14 @@ class ShoppingCartsPersistenceProviderIT {
     public void shouldCorrectlyCountShoppingCarts() {
         long initialCount = persistenceProvider.count();
 
-        ShoppingCart cart1 = ShoppingCartTestDataBuilder.aShoppingCart().build();
+        ShoppingCart cart1 = ShoppingCartTestDataBuilder.aShoppingCart()
+                .customerId(new CustomerId(customerIdWithoutShoppingCart))
+                .build();
         persistenceProvider.add(cart1);
         
-        Customer otherCustomer = CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).build();
+        Customer otherCustomer = CustomerTestDataBuilder.brandNewCustomer()
+                .build();
+
         customersPersistenceProvider.add(otherCustomer);
 
         ShoppingCart cart2 = ShoppingCartTestDataBuilder.aShoppingCart().customerId(otherCustomer.id()).build();
@@ -131,7 +142,9 @@ class ShoppingCartsPersistenceProviderIT {
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void shouldAddAndFindWhenNoTransaction() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart()
+                .customerId(new CustomerId(customerIdWithoutShoppingCart))
+                .build();
 
         persistenceProvider.add(shoppingCart);
 

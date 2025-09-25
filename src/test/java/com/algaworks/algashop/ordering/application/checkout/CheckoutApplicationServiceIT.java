@@ -2,6 +2,7 @@ package com.algaworks.algashop.ordering.application.checkout;
 
 import com.algaworks.algashop.ordering.domain.model.commons.Money;
 import com.algaworks.algashop.ordering.domain.model.commons.Quantity;
+import com.algaworks.algashop.ordering.domain.model.customer.Customer;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.customer.Customers;
 import com.algaworks.algashop.ordering.domain.model.order.*;
@@ -12,12 +13,14 @@ import com.algaworks.algashop.ordering.domain.model.product.ProductCatalogServic
 import com.algaworks.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.shoppingcart.*;
 import com.algaworks.algashop.ordering.infrastructure.listener.order.OrderEventListener;
+import com.algaworks.algashop.ordering.utils.AbstractAutoCleanableIT;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +32,8 @@ import java.util.UUID;
 
 @SpringBootTest
 @Transactional
-class CheckoutApplicationServiceIT {
+@TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
+class CheckoutApplicationServiceIT extends AbstractAutoCleanableIT {
 
     @Autowired
     private CheckoutApplicationService service;
@@ -62,17 +66,16 @@ class CheckoutApplicationServiceIT {
                         new Money("10.00"),
                         LocalDate.now().plusDays(3)
                 ));
-
-        if (!customers.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)) {
-            customers.add(CustomerTestDataBuilder.existingCustomer().build());
-        }
     }
 
     @Test
     void shouldCheckout() {
         Product product = ProductTestDataBuilder.aProduct().inStock(true).build();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+        customers.add(customer);
 
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().customerId(customer.id())
+                .withItems(false).build();
         shoppingCart.addItem(product, new Quantity(1));
         shoppingCarts.add(shoppingCart);
 
@@ -110,7 +113,12 @@ class CheckoutApplicationServiceIT {
 
     @Test
     void shouldThrowShoppingCartCantProceedToCheckoutExceptionWhenCartIsEmpty() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+        customers.add(customer);
+
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart()
+                .customerId(customer.id())
+                .withItems(false).build();
         shoppingCarts.add(shoppingCart);
 
         CheckoutInput input = CheckoutInputTestDataBuilder.aCheckoutInput()
@@ -125,8 +133,11 @@ class CheckoutApplicationServiceIT {
     void shouldThrowShoppingCartCantProceedToCheckoutExceptionWhenCartContainsUnavailableItems() {
         Product product = ProductTestDataBuilder.aProduct().inStock(true).build();
         Product unavailableProduct = ProductTestDataBuilder.aProduct().id(product.id()).inStock(false).build();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+        customers.add(customer);
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false)
+                .customerId(customer.id()).build();
 
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
         shoppingCart.addItem(product, new Quantity(1));
         shoppingCart.refreshItem(unavailableProduct);
         shoppingCarts.add(shoppingCart);
