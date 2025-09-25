@@ -8,6 +8,7 @@ import com.algaworks.algashop.ordering.domain.model.order.*;
 import com.algaworks.algashop.ordering.domain.model.product.Product;
 import com.algaworks.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import com.algaworks.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
+import com.algaworks.algashop.ordering.utils.AbstractAutoCleanableIT;
 import io.hypersistence.tsid.TSID;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ import java.util.UUID;
 
 @SpringBootTest
 @Transactional
-class CustomerLoyaltyPointsApplicationServiceIT {
+class CustomerLoyaltyPointsApplicationServiceIT extends AbstractAutoCleanableIT {
 
     @Autowired
     private CustomerLoyaltyPointsApplicationService loyaltyPointsService;

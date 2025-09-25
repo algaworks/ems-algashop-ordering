@@ -8,6 +8,7 @@ import com.algaworks.algashop.ordering.domain.model.customer.CustomerArchivedExc
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerNotFoundException;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerRegisteredEvent;
 import com.algaworks.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
+import com.algaworks.algashop.ordering.utils.AbstractAutoCleanableIT;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,7 +22,7 @@ import java.util.UUID;
 
 @SpringBootTest
 @Transactional
-class CustomerManagementApplicationServiceIT {
+class CustomerManagementApplicationServiceIT extends AbstractAutoCleanableIT {
 
     @Autowired
     private CustomerManagementApplicationService customerManagementApplicationService;
