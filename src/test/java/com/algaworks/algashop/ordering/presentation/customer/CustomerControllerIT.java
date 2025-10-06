@@ -2,7 +2,6 @@ package com.algaworks.algashop.ordering.presentation.customer;
 
 import com.algaworks.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityRepository;
 import com.algaworks.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntityTestDataBuilder;
-import com.algaworks.algashop.ordering.utils.AbstractAutoCleanableIT;
 import com.algaworks.algashop.ordering.utils.AlgaShopResourceUtils;
 import io.restassured.RestAssured;
 import io.restassured.path.json.config.JsonPathConfig;
@@ -16,20 +15,19 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 import static io.restassured.config.JsonConfig.jsonConfig;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
-public class CustomerControllerIT extends AbstractAutoCleanableIT {
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class CustomerControllerIT {
 
     @LocalServerPort
     private int port;
+
+    private static boolean databaseInitialized;
 
     @Autowired
     private CustomerPersistenceEntityRepository customerRepository;
@@ -37,12 +35,19 @@ public class CustomerControllerIT extends AbstractAutoCleanableIT {
     private static final UUID validCustomerId = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
 
     @BeforeEach
-    public void setup() throws SQLException {
-        super.setup();
+    public void setup() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.port = port;
 
         RestAssured.config().jsonConfig(jsonConfig().numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL));
+
+        initDatabase();
+    }
+
+    private void initDatabase() {
+        customerRepository.saveAndFlush(
+                CustomerPersistenceEntityTestDataBuilder.aCustomer().id(validCustomerId).build()
+        );
     }
 
     @Test
