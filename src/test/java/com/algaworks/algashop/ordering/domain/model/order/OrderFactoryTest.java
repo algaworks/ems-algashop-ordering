@@ -19,9 +19,10 @@ class OrderFactoryTest {
 
         Quantity quantity = new Quantity(1);
         CustomerId customerId = new CustomerId();
+        CreditCardId creditCardId = new CreditCardId();
 
         Order order = OrderFactory.filled(
-                customerId, shipping, billing, paymentMethod, product, quantity
+                customerId, shipping, billing, paymentMethod, product, quantity, creditCardId
         );
 
         Assertions.assertWith(order,
