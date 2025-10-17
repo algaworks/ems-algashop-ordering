@@ -30,5 +30,6 @@ public class OrderDetailOutput {
     private ShippingData shipping;
     private BillingData billing;
 
+    @Builder.Default
     private List<OrderItemDetailOutput> items = new ArrayList<>();
 }
