@@ -47,7 +47,7 @@ public class ShoppingCartBase {
                 .thenReturn(ShoppingCartOutputTestDataBuilder.aShoppingCart().id(validShoppingCartId).build());
 
         Mockito.when(queryService.findById(notFoundShoppingCartId))
-                .thenThrow(new ShoppingCartNotFoundException());
+                .thenThrow(new ShoppingCartNotFoundException(notFoundShoppingCartId));
 
         Mockito.when(managementService.createNew(Mockito.any(UUID.class)))
                 .thenReturn(validShoppingCartId);

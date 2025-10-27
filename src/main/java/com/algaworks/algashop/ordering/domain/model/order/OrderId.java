@@ -27,4 +27,12 @@ public record OrderId(TSID value) {
     public String toString() {
         return value.toString();
     }
+
+    public static void main(String[] args) {
+        Long id = 1727196000001L;
+        for (int i = 0; i < 10; i++) {
+            OrderId orderId = new OrderId(id + i);
+            System.out.println("OrderId: " + orderId + " | TSID: " + orderId.value().toLong());
+        }
+    }
 }

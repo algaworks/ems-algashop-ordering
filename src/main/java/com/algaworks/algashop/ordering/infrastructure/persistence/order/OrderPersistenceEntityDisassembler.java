@@ -80,6 +80,7 @@ public class OrderPersistenceEntityDisassembler {
                 .document(new Document(billingEmbeddable.getDocument()))
                 .phone(new Phone(billingEmbeddable.getPhone()))
                 .address(toAddressValueObject(billingEmbeddable.getAddress()))
+                .email(new Email(billingEmbeddable.getEmail()))
                 .build();
     }
 

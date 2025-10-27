@@ -22,13 +22,13 @@ public class ShoppingCartQueryServiceImpl implements ShoppingCartQueryService {
     public ShoppingCartOutput findById(UUID shoppingCartId) {
         return persistenceRepository.findById(shoppingCartId)
                 .map(s -> mapper.convert(s, ShoppingCartOutput.class))
-                .orElseThrow(ShoppingCartNotFoundException::new);
+                .orElseThrow(()->new ShoppingCartNotFoundException(shoppingCartId));
     }
 
     @Override
     public ShoppingCartOutput findByCustomerId(UUID customerId) {
         return persistenceRepository.findByCustomer_Id(customerId)
                 .map(s -> mapper.convert(s, ShoppingCartOutput.class))
-                .orElseThrow(ShoppingCartNotFoundException::new);
+                .orElseThrow(()->ShoppingCartNotFoundException.ofCustomer(customerId));
     }
 }
