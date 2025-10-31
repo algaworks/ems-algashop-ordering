@@ -1,5 +1,6 @@
 package com.algaworks.algashop.ordering.infrastructure.listener.customer;
 
+import com.algaworks.algashop.ordering.application.AbstractApplicationIT;
 import com.algaworks.algashop.ordering.application.customer.loyaltypoints.CustomerLoyaltyPointsApplicationService;
 import com.algaworks.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService;
 import com.algaworks.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService.NotifyNewRegistrationInput;
@@ -20,8 +21,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-@SpringBootTest
-class CustomerEventListenerIT {
+class CustomerEventListenerIT extends AbstractApplicationIT {
 
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;

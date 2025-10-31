@@ -1,5 +1,6 @@
 package com.algaworks.algashop.ordering.domain.model.order.shipping;
 
+import com.algaworks.algashop.ordering.domain.model.AbstractDomainIT;
 import com.algaworks.algashop.ordering.domain.model.commons.ZipCode;
 import com.algaworks.algashop.ordering.domain.model.order.shipping.ShippingCostService.CalculationRequest;
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -13,8 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.springframework.cloud.contract.wiremock.WireMockSpring.options;
 
-@SpringBootTest
-class ShippingCostServiceIT {
+class ShippingCostServiceIT extends AbstractDomainIT {
 
     @Autowired
     private ShippingCostService shippingCostService;
