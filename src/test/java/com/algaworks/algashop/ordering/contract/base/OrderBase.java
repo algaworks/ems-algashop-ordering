@@ -4,7 +4,10 @@ import com.algaworks.algashop.ordering.application.checkout.BuyNowApplicationSer
 import com.algaworks.algashop.ordering.application.checkout.BuyNowInput;
 import com.algaworks.algashop.ordering.application.checkout.CheckoutApplicationService;
 import com.algaworks.algashop.ordering.application.checkout.CheckoutInput;
-import com.algaworks.algashop.ordering.application.order.query.*;
+import com.algaworks.algashop.ordering.application.order.query.OrderDetailOutputTestDataBuilder;
+import com.algaworks.algashop.ordering.application.order.query.OrderFilter;
+import com.algaworks.algashop.ordering.application.order.query.OrderQueryService;
+import com.algaworks.algashop.ordering.application.order.query.OrderSummaryOutputTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.order.OrderNotFoundException;
 import com.algaworks.algashop.ordering.presentation.order.OrderController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;

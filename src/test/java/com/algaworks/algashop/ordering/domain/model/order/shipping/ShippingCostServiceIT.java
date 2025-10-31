@@ -1,7 +1,7 @@
 package com.algaworks.algashop.ordering.domain.model.order.shipping;
 
-import com.algaworks.algashop.ordering.domain.model.order.shipping.ShippingCostService.CalculationRequest;
 import com.algaworks.algashop.ordering.domain.model.commons.ZipCode;
+import com.algaworks.algashop.ordering.domain.model.order.shipping.ShippingCostService.CalculationRequest;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import org.assertj.core.api.Assertions;
