@@ -1,14 +1,14 @@
 package com.algaworks.algashop.ordering.infrastructure.utility.modelmapper;
 
 import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerOutput;
-import com.algaworks.algashop.ordering.core.application.order.query.OrderDetailOutput;
-import com.algaworks.algashop.ordering.core.application.order.query.OrderItemDetailOutput;
+import com.algaworks.algashop.ordering.core.ports.out.order.OrderDetailOutput;
+import com.algaworks.algashop.ordering.core.ports.out.order.OrderItemDetailOutput;
 import com.algaworks.algashop.ordering.core.application.utility.Mapper;
 import com.algaworks.algashop.ordering.core.domain.model.commons.FullName;
 import com.algaworks.algashop.ordering.core.domain.model.customer.BirthDate;
 import com.algaworks.algashop.ordering.core.domain.model.customer.Customer;
-import com.algaworks.algashop.ordering.infrastructure.persistence.order.OrderItemPersistenceEntity;
-import com.algaworks.algashop.ordering.infrastructure.persistence.order.OrderPersistenceEntity;
+import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderItemPersistenceEntity;
+import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistenceEntity;
 import io.hypersistence.tsid.TSID;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
