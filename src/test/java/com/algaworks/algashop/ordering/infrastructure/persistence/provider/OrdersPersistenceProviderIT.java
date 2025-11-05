@@ -1,9 +1,9 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.provider;
 
 
-import com.algaworks.algashop.ordering.domain.model.order.Order;
-import com.algaworks.algashop.ordering.domain.model.order.OrderStatus;
-import com.algaworks.algashop.ordering.domain.model.order.OrderTestDataBuilder;
+import com.algaworks.algashop.ordering.core.domain.model.order.Order;
+import com.algaworks.algashop.ordering.core.domain.model.order.OrderStatus;
+import com.algaworks.algashop.ordering.core.domain.model.order.OrderTestDataBuilder;
 import com.algaworks.algashop.ordering.infrastructure.persistence.AbstractPersistenceIT;
 import com.algaworks.algashop.ordering.infrastructure.persistence.SpringDataAuditingConfig;
 import com.algaworks.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityAssembler;
@@ -16,8 +16,6 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.order.OrdersPe
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Propagation;
