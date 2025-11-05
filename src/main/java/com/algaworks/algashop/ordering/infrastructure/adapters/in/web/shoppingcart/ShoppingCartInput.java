@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.presentation.shoppingcart;
+package com.algaworks.algashop.ordering.infrastructure.adapters.in.web.shoppingcart;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
