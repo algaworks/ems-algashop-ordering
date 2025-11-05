@@ -1,8 +1,7 @@
 package com.algaworks.algashop.ordering.core.application.shoppingcart;
 
 import com.algaworks.algashop.ordering.core.application.AbstractApplicationIT;
-import com.algaworks.algashop.ordering.core.application.shoppingcart.management.ShoppingCartItemInput;
-import com.algaworks.algashop.ordering.core.application.shoppingcart.management.ShoppingCartManagementApplicationService;
+import com.algaworks.algashop.ordering.core.ports.in.shoppingcart.ShoppingCartItemInput;
 import com.algaworks.algashop.ordering.core.domain.model.customer.*;
 import com.algaworks.algashop.ordering.core.domain.model.product.*;
 import com.algaworks.algashop.ordering.core.domain.model.shoppingcart.*;
