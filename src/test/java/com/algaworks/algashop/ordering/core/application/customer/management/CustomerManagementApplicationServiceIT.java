@@ -1,14 +1,17 @@
 package com.algaworks.algashop.ordering.core.application.customer.management;
 
 import com.algaworks.algashop.ordering.core.application.AbstractApplicationIT;
-import com.algaworks.algashop.ordering.core.application.customer.notification.CustomerNotificationApplicationService;
-import com.algaworks.algashop.ordering.core.application.customer.query.CustomerOutput;
-import com.algaworks.algashop.ordering.core.application.customer.query.CustomerQueryService;
+import com.algaworks.algashop.ordering.core.application.customer.CustomerManagementApplicationService;
+import com.algaworks.algashop.ordering.core.ports.out.customer.ForNotifyingCustomers;
+import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerOutput;
+import com.algaworks.algashop.ordering.core.ports.in.customer.ForQueryingCustomers;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerArchivedEvent;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerArchivedException;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerRegisteredEvent;
-import com.algaworks.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
+import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerInput;
+import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerUpdateInput;
+import com.algaworks.algashop.ordering.infrastructure.adapters.in.listener.customer.CustomerEventListener;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -27,10 +30,10 @@ class CustomerManagementApplicationServiceIT extends AbstractApplicationIT {
     private CustomerEventListener customerEventListener;
 
     @MockitoSpyBean
-    private CustomerNotificationApplicationService customerNotificationApplicationService;
+    private ForNotifyingCustomers customerNotificationApplicationService;
 
     @Autowired
-    private CustomerQueryService queryService;
+    private ForQueryingCustomers queryService;
 
     @Test
     public void shouldRegister() {
@@ -65,7 +68,7 @@ class CustomerManagementApplicationServiceIT extends AbstractApplicationIT {
                 .listen(Mockito.any(CustomerArchivedEvent.class));
 
         Mockito.verify(customerNotificationApplicationService)
-                .notifyNewRegistration(Mockito.any(CustomerNotificationApplicationService.NotifyNewRegistrationInput.class));
+                .notifyNewRegistration(Mockito.any(ForNotifyingCustomers.NotifyNewRegistrationInput.class));
     }
 
     @Test
