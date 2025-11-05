@@ -1,8 +1,8 @@
-package com.algaworks.algashop.ordering.core.application.shoppingcart.query;
+package com.algaworks.algashop.ordering.core.ports.in.shoppingcart;
 
 import java.util.UUID;
 
-public interface ShoppingCartQueryService {
+public interface ForQueryingShoppingCarts {
     ShoppingCartOutput findById(UUID shoppingCartId);
     ShoppingCartOutput findByCustomerId(UUID customerId);
 }
