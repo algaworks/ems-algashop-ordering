@@ -1,11 +1,11 @@
 package com.algaworks.algashop.ordering.core.application.shoppingcart;
 
 import com.algaworks.algashop.ordering.core.application.AbstractApplicationIT;
-import com.algaworks.algashop.ordering.core.ports.in.shoppingcart.ShoppingCartItemInput;
+import com.algaworks.algashop.ordering.core.domain.model.commons.Quantity;
 import com.algaworks.algashop.ordering.core.domain.model.customer.*;
 import com.algaworks.algashop.ordering.core.domain.model.product.*;
 import com.algaworks.algashop.ordering.core.domain.model.shoppingcart.*;
-import com.algaworks.algashop.ordering.core.domain.model.commons.Quantity;
+import com.algaworks.algashop.ordering.core.ports.in.shoppingcart.ShoppingCartItemInput;
 import com.algaworks.algashop.ordering.infrastructure.adapters.in.listener.shoppingcart.ShoppingCartEventListener;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
