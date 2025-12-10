@@ -179,7 +179,7 @@ public class Customer
         return version;
     }
 
-    public void setVersion(Long version) {
+    private void setVersion(Long version) {
         this.version = version;
     }
 
