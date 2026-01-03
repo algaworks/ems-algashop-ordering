@@ -51,6 +51,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-restclient'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     implementation 'org.flywaydb:flyway-database-postgresql'
     implementation 'commons-validator:commons-validator:1.10.1'
     implementation 'com.fasterxml.uuid:java-uuid-generator:5.2.0'
@@ -80,6 +83,9 @@ dependencies {
     testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-stub-runner'
     testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
     testImplementation 'org.testcontainers:testcontainers-postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-cache-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-data-redis-test'
+
     testImplementation 'org.assertj:assertj-core:3.27.6'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testRuntimeOnly 'com.h2database:h2'
