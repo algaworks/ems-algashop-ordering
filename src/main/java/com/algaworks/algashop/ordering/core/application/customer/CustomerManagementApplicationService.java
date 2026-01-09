@@ -86,8 +86,8 @@ public class CustomerManagementApplicationService implements ForManagingCustomer
     @Override
     public void archive(UUID rawCustomerId) {
         CustomerId customerId = new CustomerId(rawCustomerId);
-        Customer customer = customers.ofId(new CustomerId(rawCustomerId))
-                .orElseThrow(()-> new CustomerNotFoundException());
+        Customer customer = customers.ofId(customerId)
+                .orElseThrow(()-> new CustomerNotFoundException(customerId));
         customer.archive();
         customers.add(customer);
     }
@@ -96,8 +96,8 @@ public class CustomerManagementApplicationService implements ForManagingCustomer
     @Override
     public void changeEmail(UUID rawCustomerId, String newEmail) {
         CustomerId customerId = new CustomerId(rawCustomerId);
-        Customer customer = customers.ofId(new CustomerId(rawCustomerId))
-                .orElseThrow(()-> new CustomerNotFoundException());
+        Customer customer = customers.ofId(customerId)
+                .orElseThrow(()-> new CustomerNotFoundException(customerId));
         customerRegistration.changeEmail(customer, new Email(newEmail));
         customers.add(customer);
     }
