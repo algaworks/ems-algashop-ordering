@@ -8,6 +8,10 @@ public class BadGatewayException extends RuntimeException {
         super(message, cause);
     }
 
+    public BadGatewayException(String message) {
+        super(message);
+    }
+
     public static class ServerErrorException extends BadGatewayException {
         public ServerErrorException() {
         }

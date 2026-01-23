@@ -1,0 +1,82 @@
+package com.algaworks.algashop.ordering.infrastructure.adapters.out.web.shipping.client.rapidex;
+
+import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.exceptionhandler.BadGatewayException;
+import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.exceptionhandler.GatewayTimeoutException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.circuitbreaker.retry.FrameworkRetryCircuitBreaker;
+import org.springframework.cloud.circuitbreaker.retry.FrameworkRetryConfig;
+import org.springframework.cloud.circuitbreaker.retry.FrameworkRetryConfigBuilder;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
+import org.springframework.cloud.client.circuitbreaker.NoFallbackAvailableException;
+import org.springframework.core.retry.RetryException;
+import org.springframework.resilience.annotation.ConcurrencyLimit;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
+
+import java.net.SocketTimeoutException;
+
+@Component
+@Slf4j
+public class ResilientRapiDexAPIClient {
+
+    private final RapiDexAPIClient rapiDexAPIClient;
+    private final FrameworkRetryCircuitBreaker circuitBreaker;
+
+    public ResilientRapiDexAPIClient(CircuitBreakerFactory<FrameworkRetryConfig,
+                                        FrameworkRetryConfigBuilder> circuitBreakerFactory,
+                                     RapiDexAPIClient rapiDexAPIClient) {
+        this.rapiDexAPIClient = rapiDexAPIClient;
+        this.circuitBreaker = (FrameworkRetryCircuitBreaker) circuitBreakerFactory.create("rapidexAPICB");
+    }
+
+    @ConcurrencyLimit(15)
+    public DeliveryCostResponse calculate(DeliveryCostRequest request) {
+        log.info("RapidexAPI CircuitBreaker state is {}", circuitBreaker.getCircuitBreakerPolicy().getState());
+        try {
+            return circuitBreaker.run(() -> doCalculate(request));
+        } catch (NoFallbackAvailableException e) {
+            throw unwrapException(e);
+        }
+    }
+
+    private RuntimeException unwrapException(NoFallbackAvailableException e) {
+        if (e.getCause() instanceof RetryException re) {
+            if (re.getCause() instanceof GatewayTimeoutException gte) {
+                return gte;
+            }
+            if (re.getCause() instanceof BadGatewayException bge) {
+                return bge;
+            }
+        }
+        return e;
+    }
+
+    private DeliveryCostResponse doCalculate(DeliveryCostRequest request) {
+        try {
+            return rapiDexAPIClient.calculate(request);
+        } catch (RestClientException e) {
+            throw translateException(e);
+        }
+    }
+
+    private RuntimeException translateException(RestClientException e) {
+        if (e.getCause() instanceof SocketTimeoutException
+                || e instanceof ResourceAccessException) {
+            return new GatewayTimeoutException("Product Catalog API Timeout", e);
+        }
+
+        if (e instanceof HttpClientErrorException) {
+            return new BadGatewayException.ClientErrorException("Product Catalog API Bad Gateway", e);
+        }
+
+        if (e instanceof HttpServerErrorException) {
+            return new BadGatewayException.ServerErrorException("Product Catalog API Bad Gateway", e);
+        }
+
+        return new BadGatewayException("Product Catalog API Bad Gateway", e);
+    }
+
+}
