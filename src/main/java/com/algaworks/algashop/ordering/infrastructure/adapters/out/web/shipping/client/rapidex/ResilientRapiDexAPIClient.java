@@ -73,19 +73,19 @@ public class ResilientRapiDexAPIClient {
     private RuntimeException translateException(RestClientException e) {
         if (e.getCause() instanceof SocketTimeoutException
                 || e instanceof ResourceAccessException) {
-            return new GatewayTimeoutException("Product Catalog API Timeout", e);
+            return new GatewayTimeoutException("Rapidex API Timeout", e);
         }
 
         if (e instanceof HttpClientErrorException) {
 
-            return new BadGatewayException.ClientErrorException("Product Catalog API Bad Gateway", e);
+            return new BadGatewayException.ClientErrorException("Rapidex API Bad Gateway", e);
         }
 
         if (e instanceof HttpServerErrorException) {
-            return new BadGatewayException.ServerErrorException("Product Catalog API Bad Gateway", e);
+            return new BadGatewayException.ServerErrorException("Rapidex API Bad Gateway", e);
         }
 
-        return new BadGatewayException("Product Catalog API Bad Gateway", e);
+        return new BadGatewayException("Rapidex API Bad Gateway", e);
     }
 
 }
