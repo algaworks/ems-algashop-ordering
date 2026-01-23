@@ -25,6 +25,10 @@ public class BadGatewayException extends RuntimeException {
         public ClientErrorException() {
         }
 
+        public ClientErrorException(String message) {
+            super(message);
+        }
+
         public ClientErrorException(String message, Throwable cause) {
             super(message, cause);
         }

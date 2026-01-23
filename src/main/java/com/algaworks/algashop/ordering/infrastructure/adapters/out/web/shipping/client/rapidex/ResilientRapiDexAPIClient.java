@@ -36,7 +36,11 @@ public class ResilientRapiDexAPIClient {
     public DeliveryCostResponse calculate(DeliveryCostRequest request) {
         log.info("RapidexAPI CircuitBreaker state is {}", circuitBreaker.getCircuitBreakerPolicy().getState());
         try {
-            return circuitBreaker.run(() -> doCalculate(request));
+            DeliveryCostResponse response = circuitBreaker.run(() -> doCalculate(request));
+            if (response == null) {
+                throw new BadGatewayException.ClientErrorException("Invalid zip code provided");
+            }
+            return response;
         } catch (NoFallbackAvailableException e) {
             throw unwrapException(e);
         }
@@ -57,6 +61,10 @@ public class ResilientRapiDexAPIClient {
     private DeliveryCostResponse doCalculate(DeliveryCostRequest request) {
         try {
             return rapiDexAPIClient.calculate(request);
+        }
+        catch (HttpClientErrorException e) {
+            log.error("RapidexAPI Client Error", e);
+            return null;
         } catch (RestClientException e) {
             throw translateException(e);
         }
@@ -69,6 +77,7 @@ public class ResilientRapiDexAPIClient {
         }
 
         if (e instanceof HttpClientErrorException) {
+
             return new BadGatewayException.ClientErrorException("Product Catalog API Bad Gateway", e);
         }
 
