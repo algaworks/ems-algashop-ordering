@@ -63,7 +63,9 @@ public class ResilientRapiDexAPIClient {
             return rapiDexAPIClient.calculate(request);
         }
         catch (HttpClientErrorException e) {
-            log.error("RapidexAPI Client Error", e);
+            if (!(e instanceof HttpClientErrorException.NotFound)) {
+                log.warn("Client Error when loading delivery cost {}", request, e);
+            }
             return null;
         } catch (RestClientException e) {
             throw translateException(e);
@@ -77,7 +79,6 @@ public class ResilientRapiDexAPIClient {
         }
 
         if (e instanceof HttpClientErrorException) {
-
             return new BadGatewayException.ClientErrorException("Rapidex API Bad Gateway", e);
         }
 
