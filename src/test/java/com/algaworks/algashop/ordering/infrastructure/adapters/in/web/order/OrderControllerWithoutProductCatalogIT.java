@@ -13,9 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.UUID;
 
+@TestPropertySource(properties = {
+        "algashop.integrations.product-catalog.url=http://localhost:9999"
+})
 public class OrderControllerWithoutProductCatalogIT extends AbstractPresentationIT {
 
     @Autowired
@@ -50,16 +54,13 @@ public class OrderControllerWithoutProductCatalogIT extends AbstractPresentation
     public void shouldNotCreateOrderUsingProductWhenProductAPIIsUnavailable() {
         String json = AlgaShopResourceUtils.readContent("json/create-order-with-product.json");
 
-        wireMockProductCatalog.stop();
-
-        RestAssured
-                .given()
+        givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType("application/vnd.order-with-product.v1+json")
                 .body(json)
-                .when()
+            .when()
                 .post("/api/v1/orders")
-                .then()
+            .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
                 .statusCode(HttpStatus.GATEWAY_TIMEOUT.value());

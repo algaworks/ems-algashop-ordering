@@ -13,8 +13,8 @@ public class MockJwtDecoderFactory {
     public static final String DEFAULT_ISSUER_URI = "http://algashop-authorization-server:8081";
 
     public static final String[] DEFAULT_SCOPES = new String[] {
-            "ordering:read",
-            "ordering:write",
+            "orders:read",
+            "orders:write",
             "shopping-carts:read",
             "shopping-carts:write",
             "customers:read",

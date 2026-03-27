@@ -42,8 +42,7 @@ public class CustomerControllerIT extends AbstractPresentationIT {
     public void shouldCreateCustomer() {
         String json = AlgaShopResourceUtils.readContent("json/create-customer.json");
 
-        UUID createdCustomerId = RestAssured
-            .given()
+        UUID createdCustomerId = givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(json)
@@ -62,8 +61,7 @@ public class CustomerControllerIT extends AbstractPresentationIT {
 
     @Test
     public void shouldArchiveCustomer() {
-        RestAssured
-            .given()
+        givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
                 .delete("/api/v1/customers/{customerId}", validCustomerId)

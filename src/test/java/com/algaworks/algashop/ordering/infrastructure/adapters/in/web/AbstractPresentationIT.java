@@ -1,10 +1,13 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.in.web;
 
+import com.algaworks.algashop.ordering.utils.MockJwtDecoderConfig;
+import com.algaworks.algashop.ordering.utils.MockJwtDecoderFactory;
 import com.algaworks.algashop.ordering.utils.TestcontainerPostgreSQLConfig;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import io.restassured.RestAssured;
 import io.restassured.path.json.config.JsonPathConfig;
+import io.restassured.specification.RequestSpecification;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
@@ -16,7 +19,7 @@ import static io.restassured.config.JsonConfig.jsonConfig;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "classpath:db/testdata/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
-@Import(TestcontainerPostgreSQLConfig.class)
+@Import({TestcontainerPostgreSQLConfig.class, MockJwtDecoderConfig.class})
 public abstract class AbstractPresentationIT {
 
     @LocalServerPort
@@ -29,6 +32,11 @@ public abstract class AbstractPresentationIT {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.port = port;
         RestAssured.config().jsonConfig(jsonConfig().numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL));
+    }
+
+    protected RequestSpecification givenAuthenticated() {
+        return RestAssured.given()
+                .header("Authorization", "Bearer " + MockJwtDecoderFactory.DEFAULT_TOKEN_VALUE);
     }
 
     protected static void initWireMock() {
