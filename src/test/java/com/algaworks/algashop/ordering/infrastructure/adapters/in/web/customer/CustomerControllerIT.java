@@ -3,7 +3,6 @@ package com.algaworks.algashop.ordering.infrastructure.adapters.in.web.customer;
 import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.AbstractPresentationIT;
 import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceEntityRepository;
 import com.algaworks.algashop.ordering.utils.AlgaShopResourceUtils;
-import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterAll;
@@ -71,5 +70,35 @@ public class CustomerControllerIT extends AbstractPresentationIT {
 
         Assertions.assertThat(customerRepository.existsById(validCustomerId)).isTrue();
         Assertions.assertThat(customerRepository.findById(validCustomerId).orElseThrow().getArchived()).isTrue();
+    }
+
+    @Test
+    public void shouldReturnForbiddenWhenCreatingCustomerWithoutWriteScope() {
+        String json = AlgaShopResourceUtils.readContent("json/create-customer.json");
+
+        givenAuthenticatedWithNoScopeToken()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(json)
+            .when()
+                .post("/api/v1/customers")
+            .then()
+                .assertThat()
+                .statusCode(HttpStatus.FORBIDDEN.value());
+    }
+
+    @Test
+    public void shouldReturnUnauthorizedWhenExpiredTokenIsGiven() {
+        String json = AlgaShopResourceUtils.readContent("json/create-customer.json");
+
+        givenWithExpiredToken()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(json)
+            .when()
+                .post("/api/v1/customers")
+            .then()
+                .assertThat()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 }

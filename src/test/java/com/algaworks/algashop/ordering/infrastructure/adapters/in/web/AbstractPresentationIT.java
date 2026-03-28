@@ -4,7 +4,6 @@ import com.algaworks.algashop.ordering.utils.MockJwtDecoderConfig;
 import com.algaworks.algashop.ordering.utils.MockJwtDecoderFactory;
 import com.algaworks.algashop.ordering.utils.TestcontainerPostgreSQLConfig;
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import io.restassured.RestAssured;
 import io.restassured.path.json.config.JsonPathConfig;
 import io.restassured.specification.RequestSpecification;
@@ -34,9 +33,22 @@ public abstract class AbstractPresentationIT {
         RestAssured.config().jsonConfig(jsonConfig().numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL));
     }
 
-    protected RequestSpecification givenAuthenticated() {
+    protected RequestSpecification givenAuthenticated(String tokenValue) {
         return RestAssured.given()
-                .header("Authorization", "Bearer " + MockJwtDecoderFactory.DEFAULT_TOKEN_VALUE);
+                .header("Authorization",
+                        "Bearer " + tokenValue);
+    }
+
+    protected RequestSpecification givenAuthenticated() {
+        return givenAuthenticated(MockJwtDecoderFactory.DEFAULT_TOKEN_VALUE);
+    }
+
+    protected RequestSpecification givenWithExpiredToken() {
+        return givenAuthenticated(MockJwtDecoderFactory.EXPIRED_TOKEN_VALUE);
+    }
+
+    protected RequestSpecification givenAuthenticatedWithNoScopeToken() {
+        return givenAuthenticated(MockJwtDecoderFactory.NO_SCOPE_TOKEN_VALUE);
     }
 
     protected static void initWireMock() {
