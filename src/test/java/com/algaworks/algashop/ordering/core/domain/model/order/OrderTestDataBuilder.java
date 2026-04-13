@@ -76,7 +76,7 @@ public class OrderTestDataBuilder {
                 .document(new Document("225-09-1992"))
                 .phone(new Phone("123-111-9911"))
                 .fullName(new FullName("John", "Doe"))
-                .email(new Email("jhon.doe@gmail.com"))
+                .email(new Email("john.doe@gmail.com"))
                 .build();
     }
 
