@@ -13,6 +13,7 @@ import com.algaworks.algashop.ordering.core.domain.model.product.ProductTestData
 import com.algaworks.algashop.ordering.core.domain.model.shoppingcart.*;
 import com.algaworks.algashop.ordering.core.ports.in.checkout.CheckoutInput;
 import com.algaworks.algashop.ordering.infrastructure.adapters.in.listener.order.OrderEventListener;
+import com.algaworks.algashop.ordering.utils.WithMockJwt;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
