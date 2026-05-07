@@ -32,6 +32,7 @@ class ShoppingCartPersistenceEntityRepositoryIT extends AbstractPersistenceIT {
 
     @BeforeEach
     public void setup() {
+        super.setup();
         UUID customerId = CUSTOMER_ID.value();
         customerPersistenceEntity = customerPersistenceEntityRepository.getReferenceById(customerId);
     }
