@@ -3,10 +3,10 @@ package com.algaworks.algashop.ordering.core.application.checkout;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerTestDataBuilder;
 import com.algaworks.algashop.ordering.core.domain.model.product.ProductTestDataBuilder;
 import com.algaworks.algashop.ordering.core.ports.in.checkout.BuyNowInput;
+import com.algaworks.algashop.ordering.core.ports.in.checkout.ShippingInput;
 import com.algaworks.algashop.ordering.core.ports.in.commons.AddressData;
 import com.algaworks.algashop.ordering.core.ports.in.order.BillingData;
 import com.algaworks.algashop.ordering.core.ports.in.order.RecipientData;
-import com.algaworks.algashop.ordering.core.ports.in.checkout.ShippingInput;
 
 import java.util.UUID;
 

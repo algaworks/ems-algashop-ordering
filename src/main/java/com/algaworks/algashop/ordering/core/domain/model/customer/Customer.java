@@ -9,7 +9,7 @@ import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-import static com.algaworks.algashop.ordering.core.domain.model.ErrorMessages.*;
+import static com.algaworks.algashop.ordering.core.domain.model.ErrorMessages.VALIDATION_ERROR_FULLNAME_IS_NULL;
 
 public class Customer
         extends AbstractEventSourceEntity

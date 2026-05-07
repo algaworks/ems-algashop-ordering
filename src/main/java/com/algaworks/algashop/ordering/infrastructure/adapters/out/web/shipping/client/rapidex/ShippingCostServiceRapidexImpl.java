@@ -1,16 +1,11 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.out.web.shipping.client.rapidex;
 
-import com.algaworks.algashop.ordering.core.domain.model.order.shipping.ShippingCostService;
 import com.algaworks.algashop.ordering.core.domain.model.commons.Money;
-import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.exceptionhandler.BadGatewayException;
-import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.exceptionhandler.GatewayTimeoutException;
+import com.algaworks.algashop.ordering.core.domain.model.order.shipping.ShippingCostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestClientException;
 
-import java.net.SocketTimeoutException;
 import java.time.LocalDate;
 
 @Component

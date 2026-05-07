@@ -1,8 +1,8 @@
 package com.algaworks.algashop.ordering.core.application.order;
 
-import com.algaworks.algashop.ordering.core.ports.in.commons.AddressData;
 import com.algaworks.algashop.ordering.core.domain.model.commons.*;
 import com.algaworks.algashop.ordering.core.domain.model.order.Billing;
+import com.algaworks.algashop.ordering.core.ports.in.commons.AddressData;
 import com.algaworks.algashop.ordering.core.ports.in.order.BillingData;
 import org.springframework.stereotype.Component;
 

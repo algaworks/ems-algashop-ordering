@@ -2,7 +2,6 @@ package com.algaworks.algashop.ordering.infrastructure.adapters.out.web.shipping
 
 import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.exceptionhandler.BadGatewayException;
 import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.exceptionhandler.GatewayTimeoutException;
-import com.algaworks.algashop.ordering.infrastructure.config.resilience.SpringCircuitBreakerConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.circuitbreaker.retry.FrameworkRetryCircuitBreaker;
 import org.springframework.cloud.circuitbreaker.retry.FrameworkRetryConfig;

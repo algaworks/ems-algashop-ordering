@@ -4,7 +4,6 @@ import com.algaworks.algashop.ordering.infrastructure.adapters.out.web.product.c
 import com.algaworks.algashop.ordering.utils.MockJwtDecoderConfig;
 import com.algaworks.algashop.ordering.utils.TestcontainerPostgreSQLConfig;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +11,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.UUID;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;

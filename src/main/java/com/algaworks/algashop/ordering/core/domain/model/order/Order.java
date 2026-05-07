@@ -4,8 +4,8 @@ import com.algaworks.algashop.ordering.core.domain.model.AbstractEventSourceEnti
 import com.algaworks.algashop.ordering.core.domain.model.AggregateRoot;
 import com.algaworks.algashop.ordering.core.domain.model.commons.Money;
 import com.algaworks.algashop.ordering.core.domain.model.commons.Quantity;
-import com.algaworks.algashop.ordering.core.domain.model.product.Product;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerId;
+import com.algaworks.algashop.ordering.core.domain.model.product.Product;
 import lombok.Builder;
 
 import java.math.BigDecimal;
