@@ -2,7 +2,7 @@ package com.algaworks.algashop.ordering.core.application.checkout;
 
 import com.algaworks.algashop.ordering.core.application.order.BillingInputDisassembler;
 import com.algaworks.algashop.ordering.core.application.order.ShippingInputDisassembler;
-import com.algaworks.algashop.ordering.core.application.security.SecurityCheckApplicationService;
+import com.algaworks.algashop.ordering.core.application.security.SecurityChecks;
 import com.algaworks.algashop.ordering.core.domain.model.DomainException;
 import com.algaworks.algashop.ordering.core.domain.model.commons.Quantity;
 import com.algaworks.algashop.ordering.core.domain.model.commons.ZipCode;
@@ -45,7 +45,7 @@ public class BuyNowApplicationService implements ForBuyingProduct {
     private final ShippingInputDisassembler shippingInputDisassembler;
     private final BillingInputDisassembler billingInputDisassembler;
 
-    private final SecurityCheckApplicationService securityCheck;
+    private final SecurityChecks securityCheck;
 
     @Transactional
     @Override
@@ -86,7 +86,7 @@ public class BuyNowApplicationService implements ForBuyingProduct {
     }
 
 	private void verifyCanOrderFor(@NotNull UUID customerId) {
-		if (!(securityCheck.isCustomer() && securityCheck.getAuthenticatedUserId().equals(customerId))) {
+		if (!securityCheck.canOrderFor(customerId)) {
             throw new AccessDeniedException("Cannot order for customer " + customerId);
         }
 	}

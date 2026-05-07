@@ -1,6 +1,6 @@
 package com.algaworks.algashop.ordering.infrastructure.config.auditing;
 
-import com.algaworks.algashop.ordering.core.application.security.SecurityCheckApplicationService;
+import com.algaworks.algashop.ordering.core.application.security.SecurityChecks;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.auditing.DateTimeProvider;
@@ -25,7 +25,7 @@ public class SpringDataAuditingConfig {
     }
 
     @Bean
-    public AuditorAware<UUID> auditorProvider(SecurityCheckApplicationService securityCheck) {
+    public AuditorAware<UUID> auditorProvider(SecurityChecks securityCheck) {
         return () -> {
             if (!securityCheck.isAuthenticated() || securityCheck.isMachineAuthenticated()) {
                 return Optional.empty();
