@@ -2,6 +2,7 @@ package com.algaworks.algashop.ordering.infrastructure.adapters.in.web.order;
 
 import com.algaworks.algashop.ordering.core.application.checkout.BuyNowApplicationService;
 import com.algaworks.algashop.ordering.core.application.checkout.CheckoutApplicationService;
+import com.algaworks.algashop.ordering.core.application.security.SecurityChecks;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
 import com.algaworks.algashop.ordering.core.domain.model.product.ProductNotFoundException;
 import com.algaworks.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartNotFoundException;
@@ -29,6 +30,8 @@ public class OrderController {
     private final CheckoutApplicationService checkoutApplicationService;
     private final BuyNowApplicationService buyNowApplicationService;
 
+    private final SecurityChecks securityChecks;
+
     @CanReadOrders
     @GetMapping("/{orderId}")
     public OrderDetailOutput findById(@PathVariable String orderId) {
@@ -47,6 +50,7 @@ public class OrderController {
     public OrderDetailOutput createWithProduct(@Valid @RequestBody BuyNowInput input) {
         String orderId;
         try {
+            input.setCustomerId(securityChecks.getAuthenticatedUserId());
             orderId = buyNowApplicationService.buyNow(input);
         } catch (CustomerNotFoundException | ProductNotFoundException e) {
             throw new UnprocessableEntityException(e.getMessage(), e);

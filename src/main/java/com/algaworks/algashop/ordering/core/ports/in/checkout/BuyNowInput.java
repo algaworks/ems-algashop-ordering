@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.core.ports.in.checkout;
 
 import com.algaworks.algashop.ordering.core.ports.in.order.BillingData;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -30,9 +31,6 @@ public class BuyNowInput {
     private UUID productId;
 
     @NotNull
-    private UUID customerId;
-
-    @NotNull
     @Positive
     private Integer quantity;
 
@@ -40,4 +38,7 @@ public class BuyNowInput {
     private String paymentMethod;
 
     private UUID creditCardId;
+
+    @JsonIgnore
+    private UUID customerId;
 }
