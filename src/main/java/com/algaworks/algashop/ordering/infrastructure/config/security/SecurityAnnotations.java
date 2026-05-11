@@ -16,7 +16,7 @@ public class SecurityAnnotations {
 
     @Target({ElementType.METHOD, ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
-    @PreAuthorize("hasAuthority('SCOPE_orders:write') and hasRole('CUSTOMER')")
+    @PreAuthorize("hasAuthority('SCOPE_orders:write')")
     public @interface CanWriteOrders {}
 
     @Target({ElementType.METHOD, ElementType.TYPE})
