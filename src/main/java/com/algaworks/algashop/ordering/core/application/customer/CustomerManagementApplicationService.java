@@ -27,7 +27,6 @@ public class CustomerManagementApplicationService implements ForManagingCustomer
         AddressData address = input.getAddress();
 
         Customer customer = customerRegistration.register(
-                new CustomerId(input.getUserId()),
                 new FullName(input.getFirstName(), input.getLastName()),
                 new BirthDate(input.getBirthDate()),
                 new Email(input.getEmail()),

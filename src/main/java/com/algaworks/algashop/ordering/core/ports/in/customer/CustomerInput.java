@@ -1,7 +1,6 @@
 package com.algaworks.algashop.ordering.core.ports.in.customer;
 
 import com.algaworks.algashop.ordering.core.ports.in.commons.AddressData;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +12,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -46,7 +44,4 @@ public class CustomerInput {
     @NotNull
     @Valid
     private AddressData address;
-
-    @JsonIgnore
-    private UUID userId;
 }
