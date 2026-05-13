@@ -1,7 +1,7 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.in.web.order;
 
-import com.algaworks.algashop.ordering.core.application.checkout.BuyNowInputTestDataBuilder;
 import com.algaworks.algashop.ordering.core.domain.model.order.OrderId;
+import com.algaworks.algashop.ordering.core.application.checkout.BuyNowInputTestDataBuilder;
 import com.algaworks.algashop.ordering.core.ports.in.checkout.BuyNowInput;
 import com.algaworks.algashop.ordering.core.ports.out.order.OrderDetailOutput;
 import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.AbstractPresentationIT;
@@ -52,6 +52,41 @@ public class OrderControllerIT extends AbstractPresentationIT {
     }
 
     @Test
+    public void shouldListOrdersWhenAuthenticatedAsAdmin() {
+        givenAuthenticatedAdmin()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+                .get("/api/v1/orders")
+            .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    public void shouldNotListAdministrativeOrdersWhenAuthenticatedAsCustomer() {
+        givenAuthenticated()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+                .get("/api/v1/orders")
+            .then()
+                .assertThat()
+                .statusCode(HttpStatus.FORBIDDEN.value());
+    }
+
+    @Test
+    public void shouldListMyOrdersWhenAuthenticatedAsCustomer() {
+        givenAuthenticated()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+                .get("/api/v1/customers/me/orders")
+            .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
     public void shouldCreateOrderUsingProduct() {
         String json = AlgaShopResourceUtils.readContent("json/create-order-with-product.json");
 
@@ -60,7 +95,7 @@ public class OrderControllerIT extends AbstractPresentationIT {
                 .contentType("application/vnd.order-with-product.v1+json")
                 .body(json)
             .when()
-                .post("/api/v1/orders")
+                .post("/api/v1/customers/me/orders")
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -78,10 +113,17 @@ public class OrderControllerIT extends AbstractPresentationIT {
     @Test
     public void shouldCreateOrderUsingProduct_DTO() {
         UUID creditCardId = UUID.randomUUID();
-        BuyNowInput input = BuyNowInputTestDataBuilder.aBuyNowInput()
+        var buyNowInput = BuyNowInputTestDataBuilder.aBuyNowInput()
                 .productId(validProductId)
-                .customerId(validCustomerId)
                 .creditCardId(creditCardId)
+                .build();
+        BuyNowInput input = BuyNowInput.builder()
+                .productId(buyNowInput.getProductId())
+                .quantity(buyNowInput.getQuantity())
+                .paymentMethod(buyNowInput.getPaymentMethod())
+                .creditCardId(buyNowInput.getCreditCardId())
+                .shipping(buyNowInput.getShipping())
+                .billing(buyNowInput.getBilling())
                 .build();
 
         OrderDetailOutput orderDetailOutput = givenAuthenticated()
@@ -89,7 +131,7 @@ public class OrderControllerIT extends AbstractPresentationIT {
                 .contentType("application/vnd.order-with-product.v1+json")
                 .body(input)
             .when()
-                .post("/api/v1/orders")
+                .post("/api/v1/customers/me/orders")
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -115,27 +157,27 @@ public class OrderControllerIT extends AbstractPresentationIT {
                 .contentType("application/vnd.order-with-product.v1+json")
                 .body(json)
             .when()
-                .post("/api/v1/orders")
+                .post("/api/v1/customers/me/orders")
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
-                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+                .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value());
 
     }
 
     @Test
     public void shouldNotCreateOrderUsingProductWhenCustomerWasNotFound() {
         String json = AlgaShopResourceUtils.readContent("json/create-order-with-product-and-invalid-customer.json");
-        givenAuthenticated()
+        givenAuthenticatedUnknownCustomer()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType("application/vnd.order-with-product.v1+json")
                 .body(json)
             .when()
-                .post("/api/v1/orders")
+                .post("/api/v1/customers/me/orders")
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
-                .statusCode(HttpStatus.FORBIDDEN.value());
+                .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value());
     }
 
     @Test
@@ -147,7 +189,7 @@ public class OrderControllerIT extends AbstractPresentationIT {
                 .contentType("application/vnd.order-with-shopping-cart.v1+json")
                 .body(json)
             .when()
-                .post("/api/v1/orders")
+                .post("/api/v1/customers/me/orders")
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

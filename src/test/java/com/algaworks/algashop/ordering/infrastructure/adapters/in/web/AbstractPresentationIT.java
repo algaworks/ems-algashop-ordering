@@ -48,12 +48,20 @@ public abstract class AbstractPresentationIT {
         return givenAuthenticated(MockJwtFactory.DEFAULT_TOKEN_VALUE);
     }
 
+    protected RequestSpecification givenAuthenticatedAdmin() {
+        return givenAuthenticated(MockJwtFactory.ADMIN_TOKEN_VALUE);
+    }
+
     protected RequestSpecification givenWithExpiredToken() {
         return givenAuthenticated(MockJwtFactory.EXPIRED_TOKEN_VALUE);
     }
 
     protected RequestSpecification givenAuthenticatedWithNoScopeToken() {
         return givenAuthenticated(MockJwtFactory.NO_SCOPE_TOKEN_VALUE);
+    }
+
+    protected RequestSpecification givenAuthenticatedUnknownCustomer() {
+        return givenAuthenticated(MockJwtFactory.UNKNOWN_CUSTOMER_TOKEN_VALUE);
     }
 
     protected static void initWireMock() {

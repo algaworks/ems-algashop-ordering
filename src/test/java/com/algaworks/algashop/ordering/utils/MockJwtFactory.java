@@ -27,11 +27,19 @@ public class MockJwtFactory {
 
     public static final String DEFAULT_TOKEN_VALUE = "fake.jwt.token";
 
+    public static final String ADMIN_TOKEN_VALUE = "fake.jwt.admin";
+
+    public static final String UNKNOWN_CUSTOMER_TOKEN_VALUE = "fake.jwt.unknown-customer";
+
     public static final String NO_SCOPE_TOKEN_VALUE = "fake.jwt.no-scope";
 
     public static final String EXPIRED_TOKEN_VALUE = "fake.jwt.expired";
 
     public static final String DEFAULT_ROLE = "CUSTOMER";
+
+    public static final String ADMIN_ROLE = "ADMIN";
+
+    public static final String UNKNOWN_CUSTOMER_SUBJECT = "73677343-9c25-4bff-a1d8-fea3830b6d97";
 
     public static final String[] DEFAULT_AUDIENCES = {"ecommerce-web-app"};
 
@@ -41,8 +49,14 @@ public class MockJwtFactory {
         Mockito.when(jwtDecoder.decode(DEFAULT_TOKEN_VALUE))
                 .thenReturn(buildDefaultJwt());
 
+        Mockito.when(jwtDecoder.decode(ADMIN_TOKEN_VALUE))
+                .thenReturn(buildAdminJwt());
+
         Mockito.when(jwtDecoder.decode(NO_SCOPE_TOKEN_VALUE))
                 .thenReturn(buildNoScopeJwt());
+
+        Mockito.when(jwtDecoder.decode(UNKNOWN_CUSTOMER_TOKEN_VALUE))
+                .thenReturn(buildUnknownCustomerJwt());
 
         Mockito.when(jwtDecoder.decode(EXPIRED_TOKEN_VALUE))
                 .thenThrow(new JwtException("Token is expired"));
@@ -78,6 +92,14 @@ public class MockJwtFactory {
 
     public static Jwt buildNoScopeJwt() {
         return buildJwt(NO_SCOPE_TOKEN_VALUE, DEFAULT_SUBJECT, DEFAULT_ISSUER_URI, new String[]{}, DEFAULT_ROLE, DEFAULT_AUDIENCES);
+    }
+
+    public static Jwt buildAdminJwt() {
+        return buildJwt(ADMIN_TOKEN_VALUE, DEFAULT_SUBJECT, DEFAULT_ISSUER_URI, DEFAULT_SCOPES, ADMIN_ROLE, DEFAULT_AUDIENCES);
+    }
+
+    public static Jwt buildUnknownCustomerJwt() {
+        return buildJwt(UNKNOWN_CUSTOMER_TOKEN_VALUE, UNKNOWN_CUSTOMER_SUBJECT, DEFAULT_ISSUER_URI, DEFAULT_SCOPES, DEFAULT_ROLE, DEFAULT_AUDIENCES);
     }
 
 }

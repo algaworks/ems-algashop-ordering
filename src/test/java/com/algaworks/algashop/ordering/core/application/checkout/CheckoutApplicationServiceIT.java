@@ -24,7 +24,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
-import java.util.UUID;
 
 class CheckoutApplicationServiceIT
         extends AbstractApplicationIT {
@@ -54,7 +53,7 @@ class CheckoutApplicationServiceIT
     private OrderEventListener orderEventListener;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         Mockito.when(shippingCostService.calculate(Mockito.any(ShippingCostService.CalculationRequest.class)))
                 .thenReturn(new ShippingCostService.CalculationResult(
                         new Money("10.00"),
@@ -74,9 +73,7 @@ class CheckoutApplicationServiceIT
         shoppingCart.addItem(product, new Quantity(1));
         shoppingCarts.add(shoppingCart);
 
-        CheckoutInput input = CheckoutInputTestDataBuilder.aCheckoutInput()
-                .customerId(shoppingCart.id().value())
-                .build();
+        CheckoutInput input = CheckoutInputTestDataBuilder.aCheckoutInput().build();
 
 
         String orderId = service.checkout(input);
@@ -99,7 +96,6 @@ class CheckoutApplicationServiceIT
     @Test
     void shouldThrowShoppingCartNotFoundExceptionWhenCheckoutWithNonExistingShoppingCart() {
         CheckoutInput input = CheckoutInputTestDataBuilder.aCheckoutInput()
-                .customerId(UUID.randomUUID())
                 .build();
 
         Assertions.assertThatExceptionOfType(ShoppingCartNotFoundException.class)
@@ -112,7 +108,6 @@ class CheckoutApplicationServiceIT
         shoppingCarts.add(shoppingCart);
 
         CheckoutInput input = CheckoutInputTestDataBuilder.aCheckoutInput()
-                .customerId(shoppingCart.id().value())
                 .build();
 
         Assertions.assertThatExceptionOfType(ShoppingCartCantProceedToCheckoutException.class)
@@ -130,7 +125,6 @@ class CheckoutApplicationServiceIT
         shoppingCarts.add(shoppingCart);
 
         CheckoutInput input = CheckoutInputTestDataBuilder.aCheckoutInput()
-                .customerId(shoppingCart.id().value())
                 .build();
 
         Assertions.assertThatExceptionOfType(ShoppingCartCantProceedToCheckoutException.class)
