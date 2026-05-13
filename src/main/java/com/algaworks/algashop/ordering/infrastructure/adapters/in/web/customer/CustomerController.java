@@ -6,39 +6,21 @@ import com.algaworks.algashop.ordering.core.ports.in.shoppingcart.ShoppingCartOu
 import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.PageModel;
 import com.algaworks.algashop.ordering.infrastructure.config.security.SecurityAnnotations.CanReadCustomers;
 import com.algaworks.algashop.ordering.infrastructure.config.security.SecurityAnnotations.CanReadShoppingCarts;
-import com.algaworks.algashop.ordering.infrastructure.config.security.SecurityAnnotations.CanWriteCustomers;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
-
-import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.fromMethodCall;
-import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 
 @RestController
 @RequestMapping("/api/v1/customers")
 @RequiredArgsConstructor
 public class CustomerController {
 
-    private final ForManagingCustomers forManagingCustomers;
     private final ForQueryingCustomers forQueryingCustomers;
     private final ForQueryingShoppingCarts forQueryingShoppingCarts;
-
-    @CanWriteCustomers
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public CustomerOutput create(@RequestBody @Valid CustomerInput input, HttpServletResponse httpServletResponse) {
-        UUID customerId = forManagingCustomers.create(input);
-
-        UriComponentsBuilder builder = fromMethodCall(on(CustomerController.class).findById(customerId));
-        httpServletResponse.addHeader("Location", builder.toUriString());
-
-        return forQueryingCustomers.findById(customerId);
-    }
 
     @CanReadCustomers
     @GetMapping
@@ -56,21 +38,6 @@ public class CustomerController {
     @GetMapping("/{customerId}/shopping-cart")
     public ShoppingCartOutput findShoppingCartByCustomerId(@PathVariable UUID customerId) {
         return forQueryingShoppingCarts.findByCustomerId(customerId);
-    }
-
-    @CanWriteCustomers
-    @PutMapping("/{customerId}")
-    public CustomerOutput update(@PathVariable UUID customerId,
-                                 @RequestBody @Valid CustomerUpdateInput input) {
-        forManagingCustomers.update(customerId, input);
-        return forQueryingCustomers.findById(customerId);
-    }
-
-    @CanWriteCustomers
-    @DeleteMapping("/{customerId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID customerId) {
-        forManagingCustomers.archive(customerId);
     }
 
 }
