@@ -1,48 +1,59 @@
 spring:
+  config:
+    import:
+      - aws-secretsmanager:/secret/algashop/ordering/database?prefix=ordering.secrets.datasource.
+      - aws-secretsmanager:/secret/algashop/ordering/oauth2-client-secret?prefix=ordering.secrets.
+      - aws-secretsmanager:/secret/algashop/ordering/redis-password?prefix=ordering.secrets.
+      - aws-parameterstore:/config/algashop/ordering?prefix=ordering.params
+      - aws-parameterstore:/config/algashop/shared?prefix=shared.params
+  cloud:
+    aws:
+      region:
+        static: us-east-1
+      endpoint: http://algashop-localstack:4566
   cache:
     type: redis
   datasource:
-    url: jdbc:postgresql://localhost:5432/ordering
-    username: postgres
-    password: postgres
+    url: ${ordering.params.datasource.url}
+    username: ${ordering.secrets.datasource.username}
+    password: ${ordering.secrets.datasource.password}
   jpa:
-    show-sql: true
+    show-sql: ${ordering.params.jpa.show-sql}
   flyway:
     enabled: true
     locations: classpath:db/migration,classpath:db/testdata
-    user: postgres
-    password: postgres
-    url: jdbc:postgresql://localhost:5432/ordering
+    user: ${ordering.secrets.datasource.username}
+    password: ${ordering.secrets.datasource.password}
+    url: ${ordering.params.datasource.url}
   data:
     redis:
-      host: localhost
-      port: 6379
-      password: algashop
-      database: 1
-      timeout: 600
+      host: ${ordering.params.redis.host}
+      port: ${ordering.params.redis.port}
+      password: ${ordering.secrets.redis-password}
+      database: ${ordering.params.redis.database}
+      timeout: ${ordering.params.redis.timeout}
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${algashop.integrations.authorization-server.url}
+          issuer-uri: ${shared.params.auth-server-url}
       client:
         provider:
           algashop-as:
-            token-uri: ${algashop.integrations.authorization-server.url}/oauth2/token
+            token-uri: ${shared.params.auth-server-url}/oauth2/token
         registration:
           algashop-ordering-service-client:
             provider: algashop-as
             client-id: algashop-ordering-service
-            client-secret: secret123
+            client-secret: ${ordering.secrets.oauth2-client-secret}
             authorization-grant-type: client_credentials
             client-authentication-method: client_secret_basic
             scope: products:read
 
 algashop:
   integrations:
-    authorization-server.url: http://auth.algashop.local:8081
-    shipping.provider: RAPIDEX
-    rapidex.url: http://localhost:8787
+    shipping.provider: ${ordering.params.integrations.shipping-provider}
+    rapidex.url: ${ordering.params.integrations.rapidex-url}
     product-catalog:
-      url: http://localhost:8083
+      url: ${ordering.params.integrations.product-catalog-url}
       oauth2-client-registration-id: algashop-ordering-service-client
