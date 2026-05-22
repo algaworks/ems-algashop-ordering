@@ -9,3 +9,7 @@ spring:
     redis:
       host: algashop-redis
 
+algashop:
+  integrations:
+    shipping.provider: RAPIDEX
+    rapidex.url: http://wiremock:8080
