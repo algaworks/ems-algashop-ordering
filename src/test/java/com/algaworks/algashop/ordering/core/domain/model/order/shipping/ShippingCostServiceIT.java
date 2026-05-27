@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.springframework.cloud.contract.wiremock.WireMockSpring.options;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 
 class ShippingCostServiceIT extends AbstractDomainIT {
 
