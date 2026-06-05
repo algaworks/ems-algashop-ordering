@@ -12,8 +12,10 @@ import com.algaworks.algashop.ordering.infrastructure.config.security.SecurityAn
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.UUID;
 
 @RestController
@@ -24,6 +26,14 @@ public class MyShoppingCartController {
 	private final ForManagingShoppingCarts forManagingShoppingCarts;
 	private final ForQueryingShoppingCarts forQueryingShoppingCarts;
 	private final SecurityChecks securityChecks;
+
+	@CanWriteMyShoppingCart
+	@PostMapping
+	public ResponseEntity<ShoppingCartOutput> create() {
+		forManagingShoppingCarts.createNew(securityChecks.getAuthenticatedUserId());
+		return ResponseEntity.created(URI.create("/api/v1/customers/me/shopping-cart"))
+				.body(findAuthenticatedCustomerShoppingCart());
+	}
 
 	@CanReadMyShoppingCart
 	@GetMapping
