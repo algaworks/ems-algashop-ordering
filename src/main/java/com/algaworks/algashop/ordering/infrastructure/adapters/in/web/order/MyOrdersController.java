@@ -52,12 +52,6 @@ public class MyOrdersController {
     @PostMapping(consumes = "application/vnd.order-with-product.v1+json")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDetailOutput createWithProduct(@Valid @RequestBody BuyNowInput input) {
-
-        if (Math.random() < 0.5) {
-            Thread.sleep(Duration.ofMillis(100));
-            throw new RuntimeException("Fake exception");
-        }
-
         input.setCustomerId(securityChecks.getAuthenticatedUserId());
         String orderId;
         try {

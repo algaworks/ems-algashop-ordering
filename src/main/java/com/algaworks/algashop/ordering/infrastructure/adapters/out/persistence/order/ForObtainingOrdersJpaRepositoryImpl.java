@@ -54,7 +54,7 @@ public class ForObtainingOrdersJpaRepositoryImpl implements ForObtainingOrders {
 
     @Override
     public OrderDetailOutput findByIdAndCustomerId(String id, UUID customerId) {
-        OrderPersistenceEntity entity = repository.findByIdAndCustomerId(new OrderId(id).value().toLong(), customerId)
+        OrderPersistenceEntity entity = repository.findByIdAndCustomer_Id(new OrderId(id).value().toLong(), customerId)
                 .orElseThrow(() -> new OrderNotFoundException());
         return mapper.convert(entity, OrderDetailOutput.class);
     }
