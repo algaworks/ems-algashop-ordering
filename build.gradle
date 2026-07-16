@@ -57,6 +57,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-kafka'
 
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-framework-retry'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
@@ -73,6 +74,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
+    testImplementation 'org.springframework.boot:spring-boot-starter-kafka-test'
     constraints {
         testImplementation('io.rest-assured:rest-assured:6.0.0') {
             version {

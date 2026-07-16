@@ -52,6 +52,12 @@ spring:
             authorization-grant-type: client_credentials
             client-authentication-method: client_secret_basic
             scope: products:read
+  kafka:
+    bootstrap-servers: algashop-kafka-1:9092,algashop-kafka-2:9093,algashop-kafka-3:9094
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+      group-id: ordering
 
 algashop:
   integrations:
