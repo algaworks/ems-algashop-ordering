@@ -15,6 +15,14 @@ import org.springframework.stereotype.Component;
 @KafkaListener(topics = {"product-catalog.product.events"})
 public class KafkaProductIntegrationEventListener {
 
+	@KafkaHandler(isDefault = true)
+	public void handle(@Payload Object event,
+	                   @Header(value = KafkaHeaders.RECEIVED_KEY) String messageKey,
+	                   @Header(value = KafkaHeaders.OFFSET) String messageOffset
+	                   ) {
+		log.info("Event ignored: key={} offset={}", messageKey, messageOffset);
+	}
+
 	@KafkaHandler
 	public void handle(@Payload ProductListedIntegrationEvent event,
 			@Header(value = KafkaHeaders.RECEIVED_KEY) String messageKey) {
