@@ -63,10 +63,10 @@ spring:
         spring.json.trusted.packages: com.algaworks.algashop.*
         spring.json.key.default.type: java.lang.String
         spring.json.value.default.type: java.lang.String
+        spring.json.value.type.method: com.algaworks.algashop.ordering.infrastructure.config.kafka.KafkaConsumerTypeIdIdentifier.readType
         spring.json.type.mapping:
           ProductCatalog.ProductDelistedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductDelistedIntegrationEvent,
-          ProductCatalog.ProductListedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductListedIntegrationEvent,
-          ProductCatalog.ProductAddedIntegrationEvent:tools.jackson.databind.node.ObjectNode
+          ProductCatalog.ProductListedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductListedIntegrationEvent
 
 algashop:
   integrations:
