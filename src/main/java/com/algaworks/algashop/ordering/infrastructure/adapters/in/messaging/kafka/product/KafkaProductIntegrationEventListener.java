@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-@KafkaListener(topics = {"product-catalog.product.events"})
+@KafkaListener(topics = {"#{algaShopMessagingKafkaProperties.productEventTopicName}"})
 public class KafkaProductIntegrationEventListener {
 
 	@KafkaHandler(isDefault = true)

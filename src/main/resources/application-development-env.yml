@@ -75,6 +75,9 @@ algashop:
     product-catalog:
       url: ${ordering.params.integrations.product-catalog-url}
       oauth2-client-registration-id: algashop-ordering-service-client
+  messaging:
+    kafka:
+      product-event-topic-name: product-catalog.product.events
 
 
 eureka:
