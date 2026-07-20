@@ -17,7 +17,6 @@ import com.algaworks.algashop.ordering.core.domain.model.product.ProductCatalogS
 import com.algaworks.algashop.ordering.core.domain.model.product.ProductId;
 import com.algaworks.algashop.ordering.core.domain.model.product.ProductNotFoundException;
 import com.algaworks.algashop.ordering.core.domain.model.shoppingcart.ShoppingCart;
-import com.algaworks.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
 import com.algaworks.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartNotFoundException;
 import com.algaworks.algashop.ordering.core.domain.model.shoppingcart.ShoppingCarts;
 import com.algaworks.algashop.ordering.core.ports.in.checkout.CheckoutInput;
@@ -54,22 +53,13 @@ public class CheckoutApplicationService implements ForBuyingWithShoppingCart {
 	@Transactional
 	public String checkout(CheckoutInput input) {
 		Objects.requireNonNull(input);
+
 		PaymentMethod paymentMethod = PaymentMethod.valueOf(input.getPaymentMethod());
 		CustomerId customerId = new CustomerId(input.getCustomerId());
-		Customer customer = customers.ofId(customerId)
-				.orElseThrow(() -> new CustomerNotFoundException(customerId));
+		CreditCardId creditCardId = getCreditCardId(input, paymentMethod);
 
-		CreditCardId creditCardId = null;
-
-		if (paymentMethod.equals(PaymentMethod.CREDIT_CARD)) {
-			if (input.getCreditCardId() == null) {
-				throw new DomainException("Credit card id is required");
-			}
-			creditCardId = new CreditCardId(input.getCreditCardId());
-		}
-
-		ShoppingCart shoppingCart = shoppingCarts.ofCustomer(customerId)
-				.orElseThrow(() -> ShoppingCartNotFoundException.ofCustomer(customerId.value()));
+		Customer customer = loadCustomer(customerId);
+		ShoppingCart shoppingCart = loadShoppingCart(customerId);
 
 		verifyCanOrderFor(shoppingCart.customerId().value());
 
@@ -84,6 +74,27 @@ public class CheckoutApplicationService implements ForBuyingWithShoppingCart {
 		shoppingCarts.add(shoppingCart);
 
 		return order.id().toString();
+	}
+
+	private ShoppingCart loadShoppingCart(CustomerId customerId) {
+		return shoppingCarts.ofCustomer(customerId).orElseThrow(() -> ShoppingCartNotFoundException.ofCustomer(customerId.value()));
+	}
+
+	private Customer loadCustomer(CustomerId customerId) {
+		return customers.ofId(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
+	}
+
+	private CreditCardId getCreditCardId(CheckoutInput input, PaymentMethod paymentMethod) {
+		CreditCardId creditCardId = null;
+
+		if (paymentMethod.equals(PaymentMethod.CREDIT_CARD)) {
+			if (input.getCreditCardId() == null) {
+				throw new DomainException("Credit card id is required");
+			}
+			creditCardId = new CreditCardId(input.getCreditCardId());
+		}
+
+		return creditCardId;
 	}
 
 	private ShippingCostService.CalculationResult calculateShippingCost(ShippingInput shipping) {
