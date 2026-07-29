@@ -8,4 +8,6 @@ public interface ForManagingShoppingCarts {
     void removeItem(UUID rawShoppingCartId, UUID rawShoppingCartItemId);
     void empty(UUID rawShoppingCartId);
     void delete(UUID rawShoppingCartId);
+    void changeProductAvailability(UUID productId, boolean available);
+    void refreshProductPrice(UUID productId);
 }
