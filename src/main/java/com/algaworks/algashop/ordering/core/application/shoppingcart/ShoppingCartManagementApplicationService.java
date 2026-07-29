@@ -1,5 +1,6 @@
 package com.algaworks.algashop.ordering.core.application.shoppingcart;
 
+import com.algaworks.algashop.ordering.core.domain.model.commons.Money;
 import com.algaworks.algashop.ordering.core.domain.model.commons.Quantity;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerId;
 import com.algaworks.algashop.ordering.core.domain.model.product.Product;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -100,7 +102,7 @@ public class ShoppingCartManagementApplicationService implements ForManagingShop
 	}
 
 	@Override
-	public void refreshProductPrice(UUID productId) {
+	public void refreshProductPrice(UUID productId, BigDecimal price) {
 		ProductId domainProductId = new ProductId(productId);
 		List<ShoppingCart> affectedShoppingCarts = shoppingCarts.findAllContainingItem(domainProductId);
 
@@ -108,11 +110,8 @@ public class ShoppingCartManagementApplicationService implements ForManagingShop
 			return;
 		}
 
-		Product product = productCatalogService.ofId(domainProductId)
-				.orElseThrow(() -> new ProductNotFoundException(domainProductId));
-
 		affectedShoppingCarts.forEach(shoppingCart -> {
-			shoppingCart.refreshItem(product);
+			shoppingCart.changeItemPrice(domainProductId, new Money(price));
 			shoppingCarts.add(shoppingCart);
 		});
 	}
