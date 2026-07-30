@@ -6,6 +6,7 @@ import com.algaworks.algashop.ordering.core.application.product.event.ProductPri
 import com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedV2IntegrationEvent;
 import com.algaworks.algashop.ordering.core.ports.in.shoppingcart.ForManagingShoppingCarts;
 import com.algaworks.algashop.ordering.infrastructure.config.cache.ProductCacheManager;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaHandler;
@@ -51,7 +52,7 @@ public class KafkaProductIntegrationEventListener {
 	}
 
 	@KafkaHandler
-	public void handle(@Payload ProductPriceChangedV2IntegrationEvent event,
+	public void handle(@Payload @Valid ProductPriceChangedV2IntegrationEvent event,
 			@Header(value = KafkaHeaders.RECEIVED_KEY) String messageKey) {
 		log.info("Received " + event.getClass());
 		log.info("MessageKey " + messageKey);
