@@ -9,12 +9,15 @@ import com.algaworks.algashop.ordering.infrastructure.config.cache.ProductCacheM
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
+
+import java.time.Duration;
 
 @Component
 @Slf4j
@@ -24,6 +27,9 @@ public class KafkaProductIntegrationEventListener {
 
 	private final ForManagingShoppingCarts forManagingShoppingCarts;
 	private final ProductCacheManager productCacheManager;
+
+	@Value("${slow:false}")
+	private Boolean slow;
 
 	@KafkaHandler(isDefault = true)
 	public void handle(@Payload Object event,
@@ -56,8 +62,25 @@ public class KafkaProductIntegrationEventListener {
 			@Header(value = KafkaHeaders.RECEIVED_KEY) String messageKey) {
 		log.info("Received " + event.getClass());
 		log.info("MessageKey " + messageKey);
+
+		simulateSlowProcessing();
+
 		productCacheManager.evict(event.getProductId());
 		forManagingShoppingCarts.refreshProductPrice(event.getProductId(), event.getNewSalePrice());
+	}
+
+	public void simulateSlowProcessing() {
+		if (!Boolean.TRUE.equals(slow)) {
+			return;
+		}
+
+		log.warn("Slow call");
+		try {
+			Thread.sleep(Duration.ofSeconds(90));
+		} catch (Exception e) {
+			Thread.currentThread().interrupt();
+		}
+
 	}
 
 }
