@@ -54,6 +54,12 @@ spring:
             scope: products:read
   kafka:
     bootstrap-servers: algashop-kafka-1:9092,algashop-kafka-2:9093,algashop-kafka-3:9094
+    properties:
+      spring.json.type.mapping:
+        ProductCatalog.ProductDelistedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductDelistedIntegrationEvent,
+        ProductCatalog.ProductListedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductListedIntegrationEvent,
+        ProductCatalog.ProductPriceChangedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedIntegrationEvent,
+        ProductCatalog.ProductPriceChangedV2IntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedV2IntegrationEvent
     producer:
       acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -63,11 +69,6 @@ spring:
         request.timeout.ms: 5000
         delivery.timeout.ms: 30000
         max.block.ms: 5000
-        spring.json.type.mapping:
-          ProductCatalog.ProductDelistedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductDelistedIntegrationEvent,
-          ProductCatalog.ProductListedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductListedIntegrationEvent,
-          ProductCatalog.ProductPriceChangedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedIntegrationEvent,
-          ProductCatalog.ProductPriceChangedV2IntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedV2IntegrationEvent
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
@@ -83,12 +84,6 @@ spring:
         spring.json.key.default.type: java.lang.String
         spring.json.value.default.type: java.lang.String
         spring.json.value.type.method: com.algaworks.algashop.ordering.infrastructure.config.kafka.KafkaConsumerTypeIdIdentifier.readType
-        spring.json.type.mapping:
-          ProductCatalog.ProductDelistedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductDelistedIntegrationEvent,
-          ProductCatalog.ProductListedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductListedIntegrationEvent,
-          ProductCatalog.ProductPriceChangedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedIntegrationEvent,
-          ProductCatalog.ProductPriceChangedV2IntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedV2IntegrationEvent
-
 algashop:
   integrations:
     shipping.provider: ${ordering.params.integrations.shipping-provider}
