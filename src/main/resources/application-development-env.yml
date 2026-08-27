@@ -60,7 +60,8 @@ spring:
         ProductCatalog.ProductListedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductListedIntegrationEvent,
         ProductCatalog.ProductPriceChangedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedIntegrationEvent,
         ProductCatalog.ProductPriceChangedV2IntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedV2IntegrationEvent,
-        Ordering.OrderPlacedIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent
+        Ordering.OrderPlacedIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent,
+        Ordering.CheckoutAcceptedIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.CheckoutAcceptedIntegrationEvent
     producer:
       acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
