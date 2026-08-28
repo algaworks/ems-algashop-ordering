@@ -1,8 +1,8 @@
 package com.algaworks.algashop.ordering.core.application.checkout;
 
-import com.algaworks.algashop.ordering.core.application.order.event.CheckoutAcceptedIntegrationEvent;
+import com.algaworks.algashop.ordering.core.application.checkout.command.ProcessAcceptedCheckoutIntegrationCommand;
 import com.algaworks.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent;
-import com.algaworks.algashop.ordering.core.application.order.event.OrderSnapshotAssembler;
+import com.algaworks.algashop.ordering.core.application.checkout.command.OrderSnapshotAssembler;
 import com.algaworks.algashop.ordering.core.domain.model.order.Order;
 import com.algaworks.algashop.ordering.core.domain.model.order.OrderId;
 import com.algaworks.algashop.ordering.core.domain.model.order.Orders;
@@ -29,18 +29,18 @@ public class ProcessAcceptedCheckoutApplicationService implements ForProcessingC
 
 	@Override
 	@Transactional
-	public void process(CheckoutAcceptedIntegrationEvent event) {
-		OrderId orderId = new OrderId(event.getAggregateId());
+	public void process(ProcessAcceptedCheckoutIntegrationCommand integrationCommand) {
+		OrderId orderId = new OrderId(integrationCommand.getAggregateId());
 
 		if (orders.exists(orderId)) {
 			log.info("Checkout command ignored order {} already exists", orderId);
 			return;
 		}
 
-		Order order = orderSnapshotAssembler.toDomain(event.getOrder());
+		Order order = orderSnapshotAssembler.toDomain(integrationCommand.getOrder());
 		orders.add(order);
 
-		UUID rawShoppingCartId = event.getOrder().shoppingCartId();
+		UUID rawShoppingCartId = integrationCommand.getOrder().shoppingCartId();
 		if(rawShoppingCartId != null) {
 			shoppingCarts.ofId(new ShoppingCartId(rawShoppingCartId)).ifPresent(shoppingCart -> {
 				shoppingCart.empty();

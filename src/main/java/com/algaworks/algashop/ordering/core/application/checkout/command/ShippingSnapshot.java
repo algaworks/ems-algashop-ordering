@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.core.application.order.event;
+package com.algaworks.algashop.ordering.core.application.checkout.command;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

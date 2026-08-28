@@ -1,7 +1,7 @@
 package com.algaworks.algashop.ordering.core.ports.in.checkout;
 
-import com.algaworks.algashop.ordering.core.application.order.event.CheckoutAcceptedIntegrationEvent;
+import com.algaworks.algashop.ordering.core.application.checkout.command.ProcessAcceptedCheckoutIntegrationCommand;
 
 public interface ForProcessingCheckoutAccepted {
-	void process(CheckoutAcceptedIntegrationEvent event);
+	void process(ProcessAcceptedCheckoutIntegrationCommand integrationCommand);
 }
