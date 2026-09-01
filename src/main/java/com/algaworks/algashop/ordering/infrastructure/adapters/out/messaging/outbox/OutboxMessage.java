@@ -44,6 +44,7 @@ public class OutboxMessage implements Persistable<UUID> {
 	public OutboxMessage(String channelName, String aggregateId, String eventType, String payload) {
 		this.id = IdGenerator.generateTimeBasedUUID();
 		this.createdAt = OffsetDateTime.now();
+		this.nextAttemptAt = OffsetDateTime.now();
 
 		this.channelName = channelName;
 		this.aggregateId = aggregateId;
