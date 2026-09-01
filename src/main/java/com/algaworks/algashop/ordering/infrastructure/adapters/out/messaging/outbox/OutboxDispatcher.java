@@ -1,19 +1,21 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.out.messaging.outbox;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Component
 @ConditionalOnProperty(name = "algashop.messaging.outbox.dispatcher.enabled", havingValue = "true")
 @RequiredArgsConstructor
+@Slf4j
 public class OutboxDispatcher {
 
 	private final OutboxMessageRepository repository;
@@ -27,9 +29,50 @@ public class OutboxDispatcher {
 		List<OutboxMessage> batch = repository.findBatch(PageRequest.of(0, properties.getBatchSize()));
 
 		for (OutboxMessage message : batch) {
-			sender.send(message);
-			transactionTemplate.executeWithoutResult(_ -> repository.deleteMessage(message.getId()));
+			if (!isEligible(message)) {
+				continue;
+			}
+
+			try {
+				sender.send(message);
+				transactionTemplate.executeWithoutResult(_ -> repository.deleteMessage(message.getId()));
+			} catch (Exception e) {
+				transactionTemplate.executeWithoutResult(_-> registerFailure(message, e));
+			}
 		}
+	}
+
+	private void registerFailure(OutboxMessage message, Exception e) {
+		int attempts = message.getAttempts() + 1;
+		OffsetDateTime now = OffsetDateTime.now();
+
+		OffsetDateTime failedAt = null;
+		if (attempts >= properties.getMaxAttempts()) {
+			failedAt = now;
+		}
+
+		OffsetDateTime nextAttemptAt = now.plus(properties.getBackoff());
+
+		String lastError = extractError(e);
+		repository.registerFailure(message.getId(), attempts, nextAttemptAt, lastError, failedAt);
+
+		if (failedAt != null) {
+			log.error("Outbox message {} permanenty failed, requires manual intervetion", message.getId());
+		}
+	}
+
+	private String extractError(Exception e) {
+		String description;
+		if (e.getCause() != null) {
+			description = "Error: %s\n Cause:\n %s".formatted(e.getMessage(), e.getCause().getMessage());
+		} else {
+			description = "Error: %s\n".formatted(e.getMessage());
+		}
+		return description;
+	}
+
+	private boolean isEligible(OutboxMessage message) {
+		return message.getFailedAt() == null && !message.getNextAttemptAt().isAfter(OffsetDateTime.now());
 	}
 
 }

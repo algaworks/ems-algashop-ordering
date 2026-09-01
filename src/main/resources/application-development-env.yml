@@ -105,6 +105,8 @@ algashop:
       send-timeout: PT5S
       batch-size: 100
       poll-interval: PT1M #PT5S
+      max-attempts: 10
+      backoff: PT5S
       dispatcher:
         enabled: true
 

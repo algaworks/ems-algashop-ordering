@@ -30,6 +30,12 @@ public class OutboxProperties {
 	@NotNull
 	private Duration pollInterval;
 
+	@Min(1)
+	private int maxAttempts;
+
+	@NotNull
+	private Duration backoff;
+
 	@Data
 	public static class Dispatcher {
 		private boolean enabled = false;
