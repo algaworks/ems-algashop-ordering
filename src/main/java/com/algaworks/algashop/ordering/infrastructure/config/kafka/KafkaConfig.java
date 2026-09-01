@@ -25,10 +25,14 @@ public class KafkaConfig {
 		long interval = 2000L; //2s entre as tentativas
 		double multiplier = 2;
 		long maxRetries = 3L; //2 retentativas
+
 		ExponentialBackOff exponentialBackOff = new ExponentialBackOff(interval, multiplier);
 		exponentialBackOff.setMaxAttempts(maxRetries);
+
 		DefaultErrorHandler defaultErrorHandler = new DefaultErrorHandler(recoverer, exponentialBackOff);
 		defaultErrorHandler.addNotRetryableExceptions(DomainException.class);
+		defaultErrorHandler.addNotRetryableExceptions(IllegalArgumentException.class);
+
 		return defaultErrorHandler;
 	}
 

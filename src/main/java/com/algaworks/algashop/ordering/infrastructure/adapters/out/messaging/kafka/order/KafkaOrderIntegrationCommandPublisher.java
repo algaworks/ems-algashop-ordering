@@ -40,6 +40,10 @@ public class KafkaOrderIntegrationCommandPublisher implements ForPublishingOrder
 					command.getAggregateId(),
 					command);
 
+			if (command.getIdempotencyKey() != null) {
+				record.headers().add("idempotency-key", command.getIdempotencyKey().toString().getBytes());
+			}
+
 			result = kafkaTemplate.send(record).get(40, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();

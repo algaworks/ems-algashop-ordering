@@ -36,6 +36,11 @@ public class KafkaOrderIntegrationEventPublisher implements ForPublishingOrderIn
 					properties.getOrderEventTopicName(),
 					event.getAggregateId(),
 					event);
+
+			if (event.getIdempotencyKey() != null) {
+				record.headers().add("idempotency-key", event.getIdempotencyKey().toString().getBytes());
+			}
+
 			result = kafkaTemplate.send(record).get(40, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
