@@ -4,6 +4,7 @@ import com.algaworks.algashop.ordering.core.application.EventPublishingException
 import com.algaworks.algashop.ordering.core.application.IntegrationEvent;
 import com.algaworks.algashop.ordering.core.ports.out.order.ForPublishingOrderIntegrationEvents;
 import com.algaworks.algashop.ordering.infrastructure.config.kafka.AlgaShopMessagingKafkaProperties;
+import com.algaworks.algashop.ordering.infrastructure.config.kafka.KafkaConfig;
 import com.algaworks.algashop.ordering.infrastructure.config.utility.BeanValidationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,7 @@ public class KafkaOrderIntegrationEventPublisher implements ForPublishingOrderIn
 					event);
 
 			if (event.getIdempotencyKey() != null) {
-				record.headers().add("idempotency-key", event.getIdempotencyKey().toString().getBytes());
+				record.headers().add(KafkaConfig.IDEMPOTENCY_KEY_HEADER, event.getIdempotencyKey().toString().getBytes());
 			}
 
 			result = kafkaTemplate.send(record).get(40, TimeUnit.SECONDS);

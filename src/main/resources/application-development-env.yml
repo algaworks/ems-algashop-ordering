@@ -68,8 +68,9 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
       properties:
         enable.idempotence: true
-        request.timeout.ms: 5000
-        delivery.timeout.ms: 30000
+        linger.ms: 0
+        request.timeout.ms: 4000
+        delivery.timeout.ms: 5000
         max.block.ms: 5000
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -101,8 +102,11 @@ algashop:
       order-command-topic-name: ordering.order.commands
     outbox:
       enabled: true
+      send-timeout: PT5S
+      batch-size: 100
+      poll-interval: PT1M #PT5S
       dispatcher:
-        enabled: false
+        enabled: true
 
 eureka:
   client:

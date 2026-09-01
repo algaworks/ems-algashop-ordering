@@ -1,5 +1,6 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.out.messaging.outbox;
 
+import com.algaworks.algashop.ordering.infrastructure.config.kafka.KafkaConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.header.Header;
@@ -17,8 +18,6 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 @Slf4j
 public class OutboxRecorder {
-
-	static final String TYPE_ID_HEADER = "__TypeId__";
 
 	private final OutboxMessageRepository repository;
 	private final JacksonJsonSerializer<Object> outboxJsonSerializer;
@@ -45,7 +44,7 @@ public class OutboxRecorder {
 	}
 
 	private String readEventType(RecordHeaders headers, Object message) {
-		Header typeId = headers.lastHeader(TYPE_ID_HEADER);
+		Header typeId = headers.lastHeader(KafkaConfig.TYPE_ID_HEADER);
 		if (typeId == null) {
 			return message.getClass().getName();
 		}

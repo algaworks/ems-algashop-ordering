@@ -20,6 +20,9 @@ public class KafkaConfig {
 
 	private static final String DLT_PREFIX = "ordering.dlt.";
 
+	public static final String TYPE_ID_HEADER = "__TypeId__";
+	public static final String IDEMPOTENCY_KEY_HEADER = "idempotency-key";
+
 	@Bean
 	public DefaultErrorHandler defaultErrorHandler(DeadLetterPublishingRecoverer recoverer) {
 		long interval = 2000L; //2s entre as tentativas
