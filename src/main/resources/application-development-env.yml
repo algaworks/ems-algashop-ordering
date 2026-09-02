@@ -107,6 +107,7 @@ algashop:
       poll-interval: PT1M #PT5S
       max-attempts: 10
       backoff: PT5S
+      batch-deadline: PT3M
       dispatcher:
         enabled: true
 
@@ -125,3 +126,5 @@ logging:
     com.netflix.discovery.DiscoveryClient: OFF
     com.netflix.discovery: OFF
     com.netflix.eureka: OFF
+    org.springframework.kafka: OFF
+    org.apache.kafka: OFF

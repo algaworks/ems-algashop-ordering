@@ -12,6 +12,7 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -31,7 +32,6 @@ public class OutboxKafkaSender {
 	}
 
 	public void send(OutboxMessage message) {
-
 		ProducerRecord<String, byte[]> record = new ProducerRecord<>(
 				message.getChannelName(),
 				message.getAggregateId(),
