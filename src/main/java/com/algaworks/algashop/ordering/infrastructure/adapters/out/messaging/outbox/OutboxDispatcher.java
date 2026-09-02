@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @ConditionalOnProperty(name = "algashop.messaging.outbox.dispatcher.enabled", havingValue = "true")
@@ -28,6 +30,8 @@ public class OutboxDispatcher {
 	public void dispatch() {
 		OffsetDateTime deadLine = OffsetDateTime.now().plus(properties.getBatchDeadLine());
 
+		Set<String> blockedAggregates = new HashSet<>();
+
 		List<OutboxMessage> batch = repository.findBatch(PageRequest.of(0, properties.getBatchSize()));
 
 		for (OutboxMessage message : batch) {
@@ -36,7 +40,12 @@ public class OutboxDispatcher {
 				break;
 			}
 
+			if (blockedAggregates.contains(message.getAggregateId())) {
+				continue;
+			}
+
 			if (!isEligible(message)) {
+				blockedAggregates.add(message.getAggregateId());
 				continue;
 			}
 
@@ -45,6 +54,7 @@ public class OutboxDispatcher {
 				transactionTemplate.executeWithoutResult(_ -> repository.deleteMessage(message.getId()));
 			} catch (Exception e) {
 				transactionTemplate.executeWithoutResult(_ -> registerFailure(message, e));
+				blockedAggregates.add(message.getAggregateId());
 			}
 		}
 	}
