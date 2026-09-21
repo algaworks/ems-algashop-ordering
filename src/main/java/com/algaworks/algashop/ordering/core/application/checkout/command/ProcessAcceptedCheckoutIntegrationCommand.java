@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.core.application.checkout.command;
 
 import com.algaworks.algashop.ordering.core.application.IntegrationCommand;
+import com.algaworks.algashop.ordering.core.application.order.snapshot.OrderSnapshot;
 import com.algaworks.algashop.ordering.core.domain.model.IdGenerator;
 import lombok.*;
 

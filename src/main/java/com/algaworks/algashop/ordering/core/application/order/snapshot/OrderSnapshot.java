@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.core.application.checkout.command;
+package com.algaworks.algashop.ordering.core.application.order.snapshot;
 
 import com.algaworks.algashop.ordering.core.domain.model.order.OrderStatus;
 
