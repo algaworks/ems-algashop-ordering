@@ -19,7 +19,7 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @KafkaListener(
-		id = "ordering.order-commands",
+		id = "#{algaShopMessagingKafkaProperties.orderCommandsConsumerGroup}",
 		topics = "#{algaShopMessagingKafkaProperties.orderCommandTopicName}"
 )
 public class KafkaOrderIntegrationCommandListener {

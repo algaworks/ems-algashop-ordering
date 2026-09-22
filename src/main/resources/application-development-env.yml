@@ -100,6 +100,10 @@ algashop:
       product-event-topic-name: product-catalog.product.events
       order-event-topic-name: ordering.order.events
       order-command-topic-name: ordering.order.commands
+      invoice-event-topic-name: billing.invoice.events
+      product-events-consumer-group: ordering.product-events
+      order-commands-consumer-group: ordering.order-commands
+      invoice-events-consumer-group: ordering.invoice-events
     outbox:
       enabled: true
       send-timeout: PT5S
