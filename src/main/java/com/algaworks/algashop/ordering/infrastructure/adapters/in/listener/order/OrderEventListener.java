@@ -1,5 +1,7 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.in.listener.order;
 
+import com.algaworks.algashop.ordering.core.application.order.event.OrderPaidIntegrationEvent;
+import com.algaworks.algashop.ordering.core.application.order.event.OrderPaidIntegrationEventAssembler;
 import com.algaworks.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent;
 import com.algaworks.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEventAssembler;
 import com.algaworks.algashop.ordering.core.application.utility.Mapper;
@@ -17,6 +19,7 @@ public class OrderEventListener {
     private final Mapper mapper;
 
     private final OrderPlacedIntegrationEventAssembler orderPlacedIntegrationEventAssembler;
+    private final OrderPaidIntegrationEventAssembler orderPaidIntegrationEventAssembler;
     private final Orders orders;
 
     @EventListener
@@ -28,7 +31,9 @@ public class OrderEventListener {
 
     @EventListener
     public void listen(OrderPaidEvent event) {
-
+        Order order = orders.ofId(event.orderId()).orElseThrow(OrderNotFoundException::new);
+        OrderPaidIntegrationEvent integrationEvent = orderPaidIntegrationEventAssembler.toIntegrationEvent(order);
+        forPublishingOrderIntegrationEvents.send(integrationEvent);
     }
 
     @EventListener
