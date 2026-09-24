@@ -62,7 +62,9 @@ spring:
         ProductCatalog.ProductPriceChangedV2IntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedV2IntegrationEvent,
         Ordering.OrderPlacedIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent,
         Ordering.OrderPaidIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderPaidIntegrationEvent,
+        Ordering.OrderCanceledIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderCanceledIntegrationEvent,
         Billing.InvoicePaidIntegrationEvent:com.algaworks.algashop.ordering.core.application.invoice.event.InvoicePaidIntegrationEvent,
+        Billing.InvoiceCanceledIntegrationEvent:com.algaworks.algashop.ordering.core.application.invoice.event.InvoiceCanceledIntegrationEvent,
         Ordering.ProcessAcceptedCheckoutIntegrationCommand:com.algaworks.algashop.ordering.core.application.checkout.command.ProcessAcceptedCheckoutIntegrationCommand
     producer:
       acks: all

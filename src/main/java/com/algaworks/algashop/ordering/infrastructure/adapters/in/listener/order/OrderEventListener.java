@@ -1,9 +1,6 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.in.listener.order;
 
-import com.algaworks.algashop.ordering.core.application.order.event.OrderPaidIntegrationEvent;
-import com.algaworks.algashop.ordering.core.application.order.event.OrderPaidIntegrationEventAssembler;
-import com.algaworks.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent;
-import com.algaworks.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEventAssembler;
+import com.algaworks.algashop.ordering.core.application.order.event.*;
 import com.algaworks.algashop.ordering.core.application.utility.Mapper;
 import com.algaworks.algashop.ordering.core.domain.model.order.*;
 import com.algaworks.algashop.ordering.core.ports.out.order.ForPublishingOrderIntegrationEvents;
@@ -43,7 +40,8 @@ public class OrderEventListener {
 
     @EventListener
     public void listen(OrderCanceledEvent event) {
-
+        OrderCanceledIntegrationEvent integrationEvent = mapper.convert(event, OrderCanceledIntegrationEvent.class);
+        forPublishingOrderIntegrationEvents.send(integrationEvent);
     }
 
 }
