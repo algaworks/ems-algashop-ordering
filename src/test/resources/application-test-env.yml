@@ -1,4 +1,13 @@
 spring:
+  cache:
+    type: none
+  cloud:
+    discovery:
+      client:
+        simple:
+          instances:
+            product-catalog:
+              - uri: http://localhost:8781
   datasource:
     url: jdbc:postgresql://localhost:5432/ordering_test
     username: postgres
@@ -34,6 +43,47 @@ spring:
             authorization-grant-type: client_credentials
             client-authentication-method: client_secret_basic
             scope: products:read
+  kafka:
+    properties:
+      spring.json.type.mapping:
+        ProductCatalog.ProductDelistedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductDelistedIntegrationEvent,
+        ProductCatalog.ProductListedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductListedIntegrationEvent,
+        ProductCatalog.ProductPriceChangedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedIntegrationEvent,
+        ProductCatalog.ProductPriceChangedV2IntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedV2IntegrationEvent,
+        Ordering.OrderPlacedIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent,
+        Ordering.OrderPaidIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderPaidIntegrationEvent,
+        Billing.InvoicePaidIntegrationEvent:com.algaworks.algashop.ordering.core.application.invoice.event.InvoicePaidIntegrationEvent,
+        Ordering.ProcessAcceptedCheckoutIntegrationCommand:com.algaworks.algashop.ordering.core.application.checkout.command.ProcessAcceptedCheckoutIntegrationCommand
+    producer:
+      acks: all
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+      properties:
+        enable.idempotence: true
+        linger.ms: 0
+        request.timeout.ms: 4000
+        delivery.timeout.ms: 5000
+        max.block.ms: 5000
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      group-id: ordering
+      properties:
+        max.poll.interval.ms: 300000 # 5 minutos ->
+        max.poll.records: 500 # quantidade de registros buscados
+        heartbeat.interval.ms: 3000 # 3 segundos
+        #        max.poll.interval.ms: 10000
+        #        max.poll.records: 1
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+        spring.json.trusted.packages: com.algaworks.algashop.*
+        spring.json.key.default.type: java.lang.String
+        spring.json.value.default.type: java.lang.String
+        spring.json.value.type.method: com.algaworks.algashop.ordering.infrastructure.config.kafka.KafkaConsumerTypeIdIdentifier.readType
+
+
+eureka:
+  client:
+    enabled: false
 
 algashop:
   integrations:
@@ -41,5 +91,24 @@ algashop:
     shipping.provider: FAKE
     rapidex.url: http://localhost:8780
     product-catalog:
-      url: http://localhost:8781
+      url: http://product-catalog
       oauth2-client-registration-id: algashop-ordering-service-client
+  messaging:
+    kafka:
+      product-event-topic-name: product-catalog.product.events
+      order-event-topic-name: ordering.order.events
+      order-command-topic-name: ordering.order.commands
+      invoice-event-topic-name: billing.invoice.events
+      product-events-consumer-group: ordering.product-events
+      order-commands-consumer-group: ordering.order-commands
+      invoice-events-consumer-group: ordering.invoice-events
+    outbox:
+      enabled: true
+      send-timeout: PT5S
+      batch-size: 100
+      poll-interval: PT1M #PT5S
+      max-attempts: 10
+      backoff: PT5S
+      batch-deadline: PT3M
+      dispatcher:
+        enabled: false
