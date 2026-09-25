@@ -99,9 +99,11 @@ algashop:
       order-event-topic-name: ordering.order.events
       order-command-topic-name: ordering.order.commands
       invoice-event-topic-name: billing.invoice.events
+      stock-event-topic-name: product-catalog.stock.events
       product-events-consumer-group: ordering.product-events
       order-commands-consumer-group: ordering.order-commands
       invoice-events-consumer-group: ordering.invoice-events
+      stock-events-consumer-group: ordering.stock-events
     outbox:
       enabled: true
       send-timeout: PT5S

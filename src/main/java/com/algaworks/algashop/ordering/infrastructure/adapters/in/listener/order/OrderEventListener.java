@@ -35,7 +35,8 @@ public class OrderEventListener {
 
     @EventListener
     public void listen(OrderReadyEvent event) {
-
+        OrderReadyIntegrationEvent integrationEvent = mapper.convert(event, OrderReadyIntegrationEvent.class);
+        forPublishingOrderIntegrationEvents.send(integrationEvent);
     }
 
     @EventListener
