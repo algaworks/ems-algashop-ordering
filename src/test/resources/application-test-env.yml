@@ -48,6 +48,8 @@ spring:
       spring.json.type.mapping:
         ProductCatalog.ProductDelistedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductDelistedIntegrationEvent,
         ProductCatalog.ProductListedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductListedIntegrationEvent,
+        ProductCatalog.ProductRestockedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductRestockedIntegrationEvent,
+        ProductCatalog.ProductSoldOutIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductSoldOutIntegrationEvent,
         ProductCatalog.ProductPriceChangedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedIntegrationEvent,
         ProductCatalog.ProductPriceChangedV2IntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedV2IntegrationEvent,
         Ordering.OrderPlacedIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent,

@@ -28,6 +28,7 @@ public class ShoppingCartManagementApplicationService implements ForManagingShop
 	private final ShoppingCarts shoppingCarts;
 	private final ProductCatalogService productCatalogService;
 	private final ShoppingService shoppingService;
+	private final ShoppingCartProductAdjustmentService shoppingCartProductAdjustmentService;
 
 	@Transactional
 	@Override
@@ -91,32 +92,12 @@ public class ShoppingCartManagementApplicationService implements ForManagingShop
 
 	@Override
 	public void changeProductAvailability(UUID productId, boolean available) {
-		List<ShoppingCart> affectedShoppingCarts = shoppingCarts.findAllContainingItem(new ProductId(productId));
-
-		if (affectedShoppingCarts.isEmpty()) {
-			return;
-		}
-
-		affectedShoppingCarts.forEach(shoppingCart -> {
-			shoppingCart.changeItemAvailability(new ProductId(productId), available);
-			shoppingCarts.add(shoppingCart);
-		});
+		shoppingCartProductAdjustmentService.changeAvailability(new ProductId(productId), available);
 	}
 
 	@Override
 	public void refreshProductPrice(UUID productId, BigDecimal price) {
-		ProductId domainProductId = new ProductId(productId);
-		List<ShoppingCart> affectedShoppingCarts = shoppingCarts.findAllContainingItem(domainProductId);
-
-		if (affectedShoppingCarts.isEmpty()) {
-			return;
-		}
-
-		affectedShoppingCarts.forEach(shoppingCart -> {
-			log.info("Updating ShoppingCart={} ", shoppingCart.id().toString());
-			shoppingCart.changeItemPrice(domainProductId, new Money(price));
-			shoppingCarts.add(shoppingCart);
-		});
+		shoppingCartProductAdjustmentService.adjustPrice(new ProductId(productId), new Money(price));
 	}
 
 }
