@@ -103,11 +103,6 @@ public class CheckoutApplicationService implements ForBuyingWithShoppingCart {
 		return shippingCostService.calculate(new ShippingCostService.CalculationRequest(origin, destination));
 	}
 
-	private Product findProduct(ProductId productId) {
-		return productCatalogService.ofId(productId)
-				.orElseThrow(()-> new ProductNotFoundException());
-	}
-
 	private void verifyCanOrderFor(@NotNull UUID customerId) {
 		if (!securityCheck.canOrderFor(customerId)) {
 			throw new AccessDeniedException("Cannot order for customer " + customerId);
