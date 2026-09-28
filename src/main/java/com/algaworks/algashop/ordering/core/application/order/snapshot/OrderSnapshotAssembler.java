@@ -61,8 +61,12 @@ public class OrderSnapshotAssembler {
 
     private BillingSnapshot toSnapshot(Billing billing) {
         return new BillingSnapshot(
-                billing.fullName().firstName(), billing.fullName().lastName(), billing.document().value(),
-                billing.phone().value(), billing.email().value(), toSnapshot(billing.address())
+                billing.fullName().firstName(),
+                billing.fullName().lastName(),
+                billing.document().value(),
+                billing.email().value(),
+                billing.phone().value(),
+                toSnapshot(billing.address())
         );
     }
 
@@ -78,8 +82,14 @@ public class OrderSnapshotAssembler {
     }
 
     private AddressSnapshot toSnapshot(Address address) {
-        return new AddressSnapshot(address.street(), address.complement(), address.neighborhood(),
-                address.number(), address.city(), address.state(), address.zipCode().value());
+        return new AddressSnapshot(
+                address.street(),
+                address.number(),
+                address.complement(),
+                address.neighborhood(),
+                address.city(),
+                address.state(),
+                address.zipCode().value());
     }
 
     private OrderItemSnapshot toSnapshot(OrderItem item) {
