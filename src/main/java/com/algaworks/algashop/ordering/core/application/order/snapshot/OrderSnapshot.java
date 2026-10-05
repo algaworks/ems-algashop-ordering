@@ -18,6 +18,5 @@ public record OrderSnapshot(
         UUID creditCardId,
         BigDecimal totalAmount,
         Integer totalItems,
-        Set<OrderItemSnapshot> items,
-        UUID shoppingCartId
+        Set<OrderItemSnapshot> items
 ){}

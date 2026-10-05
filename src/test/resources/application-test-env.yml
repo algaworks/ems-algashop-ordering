@@ -54,8 +54,7 @@ spring:
         ProductCatalog.ProductPriceChangedV2IntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedV2IntegrationEvent,
         Ordering.OrderPlacedIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent,
         Ordering.OrderPaidIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderPaidIntegrationEvent,
-        Billing.InvoicePaidIntegrationEvent:com.algaworks.algashop.ordering.core.application.invoice.event.InvoicePaidIntegrationEvent,
-        Ordering.ProcessAcceptedCheckoutIntegrationCommand:com.algaworks.algashop.ordering.core.application.checkout.command.ProcessAcceptedCheckoutIntegrationCommand
+        Billing.InvoicePaidIntegrationEvent:com.algaworks.algashop.ordering.core.application.invoice.event.InvoicePaidIntegrationEvent
     producer:
       acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -99,11 +98,9 @@ algashop:
     kafka:
       product-event-topic-name: product-catalog.product.events
       order-event-topic-name: ordering.order.events
-      order-command-topic-name: ordering.order.commands
       invoice-event-topic-name: billing.invoice.events
       stock-event-topic-name: product-catalog.stock.events
       product-events-consumer-group: ordering.product-events
-      order-commands-consumer-group: ordering.order-commands
       invoice-events-consumer-group: ordering.invoice-events
       stock-events-consumer-group: ordering.stock-events
     outbox:
