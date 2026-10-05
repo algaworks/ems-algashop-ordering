@@ -53,8 +53,7 @@ spring:
         ProductCatalog.ProductPriceChangedIntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedIntegrationEvent,
         ProductCatalog.ProductPriceChangedV2IntegrationEvent:com.algaworks.algashop.ordering.core.application.product.event.ProductPriceChangedV2IntegrationEvent,
         Ordering.OrderPlacedIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent,
-        Ordering.OrderPaidIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderPaidIntegrationEvent,
-        Billing.InvoicePaidIntegrationEvent:com.algaworks.algashop.ordering.core.application.invoice.event.InvoicePaidIntegrationEvent
+        Ordering.OrderPaidIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderPaidIntegrationEvent
     producer:
       acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -98,11 +97,7 @@ algashop:
     kafka:
       product-event-topic-name: product-catalog.product.events
       order-event-topic-name: ordering.order.events
-      invoice-event-topic-name: billing.invoice.events
-      stock-event-topic-name: product-catalog.stock.events
       product-events-consumer-group: ordering.product-events
-      invoice-events-consumer-group: ordering.invoice-events
-      stock-events-consumer-group: ordering.stock-events
     outbox:
       enabled: true
       send-timeout: PT5S
