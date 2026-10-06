@@ -23,27 +23,30 @@ public class OutboxRecorder {
 	private final JacksonJsonSerializer<Object> outboxJsonSerializer;
 
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void record(String channelName, String aggregateId, Object message) {
+	public void record(OutboxDraft draft) {
+		Object message = draft.payload();
 		RecordHeaders headers = new RecordHeaders();
-		byte[] payload = outboxJsonSerializer.serialize(channelName, headers, message);
+		byte[] payload = outboxJsonSerializer.serialize(draft.channelName(), headers, message);
 
-		String eventType = readEventType(headers, message);
+		String messageType = readMessageType(headers, message);
 
 		OutboxMessage outboxMessage = OutboxMessage.builder()
-				.channelName(channelName)
-				.aggregateId(aggregateId)
-				.eventType(eventType)
+				.channelName(draft.channelName())
+				.aggregateId(draft.aggregateId())
+				.messageType(messageType)
+				.replyTopic(draft.replyTopic())
+				.correlationId(draft.correlationId())
 				.payload(new String(payload, StandardCharsets.UTF_8))
 				.build();
 
 		repository.save(outboxMessage);
 
 		log.info("Recorder {} on outbox: channel={} aggregateId{} id={}", message.getClass().getSimpleName(),
-				channelName, aggregateId, outboxMessage.getId());
+				draft.channelName(), draft.aggregateId(), outboxMessage.getId());
 
 	}
 
-	private String readEventType(RecordHeaders headers, Object message) {
+	private String readMessageType(RecordHeaders headers, Object message) {
 		Header typeId = headers.lastHeader(KafkaConfig.TYPE_ID_HEADER);
 		if (typeId == null) {
 			return message.getClass().getName();

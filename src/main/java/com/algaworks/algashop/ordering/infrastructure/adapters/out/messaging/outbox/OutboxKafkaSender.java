@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.KafkaException;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -38,14 +38,22 @@ public class OutboxKafkaSender {
 				message.getPayload().getBytes(StandardCharsets.UTF_8)
 		);
 
-		record.headers().add(KafkaConfig.TYPE_ID_HEADER, message.getEventType().getBytes(StandardCharsets.UTF_8));
+		record.headers().add(KafkaConfig.TYPE_ID_HEADER, message.getMessageType().getBytes(StandardCharsets.UTF_8));
 		record.headers().add(KafkaConfig.IDEMPOTENCY_KEY_HEADER, message.getId().toString().getBytes(StandardCharsets.UTF_8));
+
+		if (message.getCorrelationId() != null) {
+			record.headers().add(KafkaHeaders.CORRELATION_ID, message.getCorrelationId().getBytes(StandardCharsets.UTF_8));
+		}
+
+		if (message.getReplyTopic() != null) {
+			record.headers().add(KafkaHeaders.REPLY_TOPIC, message.getReplyTopic().getBytes(StandardCharsets.UTF_8));
+		}
 
 		SendResult<String, byte[]> result = doSend(record);
 
 		RecordMetadata metadata = result.getRecordMetadata();
 		log.info("Published {} from outbox to {}-{} at offset {} | messageId={} aggregateId={}",
-				message.getEventType(), metadata.topic(), metadata.partition(),
+				message.getMessageType(), metadata.topic(), metadata.partition(),
 				metadata.offset(), message.getId(), message.getAggregateId());
 
 	}
