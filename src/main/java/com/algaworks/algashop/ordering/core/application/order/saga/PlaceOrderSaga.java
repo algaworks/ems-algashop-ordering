@@ -38,6 +38,11 @@ public class PlaceOrderSaga {
 		return new PlaceOrderSaga(sagaId, orderId, status, step, version);
 	}
 
+	public void moveToInvoicing() {
+		require(isRunningAt(PlaceOrderSagaStep.PLACING_ORDER));
+		changeStepTo(PlaceOrderSagaStep.INVOICING);
+	}
+
 	public boolean isRunningAt(PlaceOrderSagaStep step) {
 		return this.status == SagaStatus.RUNNING && this.step == step;
 	}
@@ -100,4 +105,5 @@ public class PlaceOrderSaga {
 				", version=" + version +
 				'}';
 	}
+
 }

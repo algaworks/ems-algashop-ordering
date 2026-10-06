@@ -87,4 +87,20 @@ public class KafkaConfig {
 				))
 				.build();
 	}
+
+	@Bean
+	public NewTopic sagaRepliesDlt(AlgaShopMessagingKafkaProperties properties) {
+		return createDeadLetterTopic(properties.getSagaRepliesTopicName());
+	}
+
+	@Bean
+	public NewTopic sagaRepliesTopic(AlgaShopMessagingKafkaProperties properties) {
+		return TopicBuilder.name(properties.getSagaRepliesTopicName())
+				.partitions(TOPIC_PARTITIONS)
+				.replicas(TOPIC_REPLICAS)
+				.configs(Map.of(
+						"min.insync.replicas", "2"
+				))
+				.build();
+	}
 }
