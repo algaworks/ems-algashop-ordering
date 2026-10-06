@@ -1,7 +1,7 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.out.messaging.kafka.order;
 
 import com.algaworks.algashop.ordering.core.application.EventPublishingException;
-import com.algaworks.algashop.ordering.core.application.IntegrationEvent;
+import com.algaworks.algashop.ordering.core.application.OutboundIntegrationEvent;
 import com.algaworks.algashop.ordering.core.ports.out.order.ForPublishingOrderIntegrationEvents;
 import com.algaworks.algashop.ordering.infrastructure.config.kafka.AlgaShopMessagingKafkaProperties;
 import com.algaworks.algashop.ordering.infrastructure.config.kafka.KafkaConfig;
@@ -31,7 +31,7 @@ public class KafkaOrderIntegrationEventPublisher implements ForPublishingOrderIn
 	private final BeanValidationUtil beanValidationUtil;
 
 	@Override
-	public void send(IntegrationEvent event) {
+	public void send(OutboundIntegrationEvent event) {
 		beanValidationUtil.validate(event);
 		SendResult<String, Object> result = null;
 		try {

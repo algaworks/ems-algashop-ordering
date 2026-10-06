@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.core.application.product.event;
 
-import com.algaworks.algashop.ordering.core.application.IntegrationEvent;
+import com.algaworks.algashop.ordering.core.application.InboundIntegrationEvent;
+import com.algaworks.algashop.ordering.core.application.OutboundIntegrationEvent;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductPriceChangedV2IntegrationEvent implements IntegrationEvent {
+public class ProductPriceChangedV2IntegrationEvent implements InboundIntegrationEvent {
 	@NotNull
 	private UUID productId;
 	@NotNull
@@ -29,8 +30,4 @@ public class ProductPriceChangedV2IntegrationEvent implements IntegrationEvent {
 	@NotNull
 	private BigDecimal newSalePrice;
 
-	@Override
-	public String getAggregateId() {
-		return productId.toString();
-	}
 }

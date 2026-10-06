@@ -1,6 +1,6 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.out.messaging.outbox;
 
-import com.algaworks.algashop.ordering.core.application.IntegrationEvent;
+import com.algaworks.algashop.ordering.core.application.OutboundIntegrationEvent;
 import com.algaworks.algashop.ordering.core.ports.out.order.ForPublishingOrderIntegrationEvents;
 import com.algaworks.algashop.ordering.infrastructure.config.kafka.AlgaShopMessagingKafkaProperties;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class OutboxOrderIntegrationEventPublisher implements ForPublishingOrderI
 	private final AlgaShopMessagingKafkaProperties properties;
 
 	@Override
-	public void send(IntegrationEvent event) {
+	public void send(OutboundIntegrationEvent event) {
 		recorder.record(properties.getOrderEventTopicName(), event.getAggregateId(), event);
 	}
 }

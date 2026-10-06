@@ -1,7 +1,7 @@
 package com.algaworks.algashop.ordering.core.ports.out.order;
 
-import com.algaworks.algashop.ordering.core.application.IntegrationEvent;
+import com.algaworks.algashop.ordering.core.application.OutboundIntegrationEvent;
 
 public interface ForPublishingOrderIntegrationEvents {
-	void send(IntegrationEvent event);
+	void send(OutboundIntegrationEvent event);
 }

@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class CommandPublishingException extends RuntimeException {
 
-	private IntegrationCommand command;
+	private OutboundIntegrationCommand command;
 
 	public CommandPublishingException() {
 	}
@@ -27,7 +27,7 @@ public class CommandPublishingException extends RuntimeException {
 	}
 
 	public CommandPublishingException(String message,
-	                                  IntegrationCommand command,
+	                                  OutboundIntegrationCommand command,
 	                                  Throwable e) {
 		super("%s Event=%s AggregateId=%s".formatted(message, command.getClass().getSimpleName(), command.getAggregateId()), e);
 		this.command = command;

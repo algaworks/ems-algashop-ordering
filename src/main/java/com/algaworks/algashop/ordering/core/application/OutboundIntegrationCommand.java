@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.UUID;
 
-public interface IntegrationEvent {
+public interface OutboundIntegrationCommand {
 	@JsonIgnore
 	String getAggregateId();
+
 	@JsonIgnore
 	default UUID getIdempotencyKey() {
 		return null;
