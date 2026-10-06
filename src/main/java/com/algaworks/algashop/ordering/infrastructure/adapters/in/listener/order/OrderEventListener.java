@@ -3,6 +3,7 @@ package com.algaworks.algashop.ordering.infrastructure.adapters.in.listener.orde
 import com.algaworks.algashop.ordering.core.application.order.event.*;
 import com.algaworks.algashop.ordering.core.application.utility.Mapper;
 import com.algaworks.algashop.ordering.core.domain.model.order.*;
+import com.algaworks.algashop.ordering.core.ports.in.order.saga.ForCoordinatingPlaceOrderSaga;
 import com.algaworks.algashop.ordering.core.ports.out.order.ForPublishingOrderIntegrationEvents;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
@@ -19,11 +20,18 @@ public class OrderEventListener {
     private final OrderPaidIntegrationEventAssembler orderPaidIntegrationEventAssembler;
     private final Orders orders;
 
+    private final ForCoordinatingPlaceOrderSaga forCoordinatingPlaceOrderSaga;
+
     @EventListener
-    public void listen(OrderPlacedEvent event) {
+    public void onOrderPlacedPublishIntegrationEvent(OrderPlacedEvent event) {
         Order order = orders.ofId(event.orderId()).orElseThrow(OrderNotFoundException::new);
         OrderPlacedIntegrationEvent integrationEvent = orderPlacedIntegrationEventAssembler.toIntegrationEvent(order);
         forPublishingOrderIntegrationEvents.send(integrationEvent);
+    }
+
+    @EventListener
+    public void onOrderPlacedStartSaga(OrderPlacedEvent event) {
+        forCoordinatingPlaceOrderSaga.start(event.orderId().toString());
     }
 
     @EventListener

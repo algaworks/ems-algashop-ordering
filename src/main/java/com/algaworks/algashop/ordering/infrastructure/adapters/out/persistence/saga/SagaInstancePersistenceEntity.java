@@ -35,7 +35,7 @@ public abstract class SagaInstancePersistenceEntity {
 	private OffsetDateTime createdAt;
 
 	@LastModifiedDate
-	private OffsetDateTime updateAt;
+	private OffsetDateTime updatedAt;
 
 	@Version
 	private long version;
