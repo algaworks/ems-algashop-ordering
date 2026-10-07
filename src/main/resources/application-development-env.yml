@@ -66,7 +66,8 @@ spring:
         Ordering.OrderPaidIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderPaidIntegrationEvent,
         Ordering.OrderCanceledIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderCanceledIntegrationEvent,
         Ordering.OrderReadyIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderReadyIntegrationEvent,
-        Billing.IssueInvoiceIntegrationCommand:com.algaworks.algashop.ordering.core.application.invoice.command.IssueInvoiceIntegrationCommand
+        Billing.IssueInvoiceIntegrationCommand:com.algaworks.algashop.ordering.core.application.invoice.command.IssueInvoiceIntegrationCommand,
+        Billing.InvoicePaidIntegrationReply:com.algaworks.algashop.ordering.core.application.invoice.reply.InvoicePaidIntegrationReply
     producer:
       acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -107,6 +108,7 @@ algashop:
       product-events-consumer-group: ordering.product-events
       billing-invoice-commands-topic-name: billing.invoice.commands
       saga-replies-topic-name: ordering.saga.replies
+      saga-replies-consumer-group: ordering.saga-replies
     outbox:
       enabled: true
       send-timeout: PT5S

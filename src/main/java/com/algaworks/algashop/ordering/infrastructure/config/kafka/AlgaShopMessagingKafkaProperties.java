@@ -25,4 +25,7 @@ public class AlgaShopMessagingKafkaProperties {
 
 	@NotBlank
 	private String sagaRepliesTopicName;
+
+	@NotBlank
+	private String sagaRepliesConsumerGroup;
 }
