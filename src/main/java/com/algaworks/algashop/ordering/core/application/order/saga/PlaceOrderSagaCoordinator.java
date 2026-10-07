@@ -52,7 +52,7 @@ public class PlaceOrderSagaCoordinator implements ForCoordinatingPlaceOrderSaga 
 	public void onInvoicePaid(UUID sagaId) {
 		PlaceOrderSaga saga = findSaga(sagaId);
 
-		if (saga.isReservingStock()) {
+		if (saga.isReservingStock() || saga.hasSucceeded()) {
 			logIgnored(saga);
 			return;
 		}
@@ -65,6 +65,25 @@ public class PlaceOrderSagaCoordinator implements ForCoordinatingPlaceOrderSaga 
 		sagas.add(saga);
 
 		commands.send(saga.sagaId().toString(), reserveStockIntegrationCommand(order));
+	}
+
+	@Override
+	public void onStockReservationConfirmed(UUID sagaId) {
+		PlaceOrderSaga saga = findSaga(sagaId);
+
+		if (saga.hasSucceeded()) {
+			logIgnored(saga);
+			return;
+		}
+
+		Order order = findOrder(saga.orderId());
+		order.markAsReady();
+		orders.add(order);
+
+		saga.moveToApprovingOrder();
+		saga.endSucceeded();
+		sagas.add(saga);
+
 	}
 
 	private void logIgnored(PlaceOrderSaga saga) {

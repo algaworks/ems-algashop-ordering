@@ -2,6 +2,7 @@ package com.algaworks.algashop.ordering.infrastructure.adapters.in.messaging.kaf
 
 import com.algaworks.algashop.ordering.core.application.InboundIntegrationReply;
 import com.algaworks.algashop.ordering.core.application.invoice.reply.InvoicePaidIntegrationReply;
+import com.algaworks.algashop.ordering.core.application.stock.reply.StockReservationConfirmedIntegrationReply;
 import com.algaworks.algashop.ordering.core.ports.in.order.saga.ForCoordinatingPlaceOrderSaga;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,18 @@ public class KafkaPlaceOrderSagaReplyListener {
         UUID sagaId = requireSagaId(correlationId);
         logReceived(reply, sagaId, messageKey, partition, offset);
         coordinator.onInvoicePaid(sagaId);
+    }
+
+    @KafkaHandler
+    public void handle(
+            @Payload @Valid StockReservationConfirmedIntegrationReply reply,
+            @Header(value = KafkaHeaders.CORRELATION_ID, required = false) byte[] correlationId,
+            @Header(value = KafkaHeaders.RECEIVED_KEY, required = false) String messageKey,
+            @Header(value = KafkaHeaders.RECEIVED_PARTITION, required = false) Integer partition,
+            @Header(value = KafkaHeaders.OFFSET, required = false) Long offset) {
+        UUID sagaId = requireSagaId(correlationId);
+        logReceived(reply, sagaId, messageKey, partition, offset);
+        coordinator.onStockReservationConfirmed(sagaId);
     }
 
     // o tópico é exclusivo da saga: tipo desconhecido é erro de contrato

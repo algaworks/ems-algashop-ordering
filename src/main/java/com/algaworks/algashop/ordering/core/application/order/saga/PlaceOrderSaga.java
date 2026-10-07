@@ -48,6 +48,24 @@ public class PlaceOrderSaga {
 		changeStepTo(PlaceOrderSagaStep.RESERVING_STOCK);
 	}
 
+	public void moveToApprovingOrder() {
+		require(isRunningAt(PlaceOrderSagaStep.RESERVING_STOCK));
+		changeStepTo(PlaceOrderSagaStep.APPROVING_ORDER);
+	}
+
+	public boolean hasSucceeded() {
+		return this.status == SagaStatus.SUCCEEDED;
+	}
+
+	public void endSucceeded() {
+		require(canEndSucceeded());
+		changeStatusTo(SagaStatus.SUCCEEDED);
+	}
+
+	private boolean canEndSucceeded() {
+		return isRunningAt(PlaceOrderSagaStep.APPROVING_ORDER);
+	}
+
 	public boolean isReservingStock() {
 		return isRunningAt(PlaceOrderSagaStep.RESERVING_STOCK);
 	}
