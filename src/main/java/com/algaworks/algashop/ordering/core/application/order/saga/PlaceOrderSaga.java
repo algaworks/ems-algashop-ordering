@@ -43,6 +43,15 @@ public class PlaceOrderSaga {
 		changeStepTo(PlaceOrderSagaStep.INVOICING);
 	}
 
+	public void moveToReservingStock() {
+		require(isRunningAt(PlaceOrderSagaStep.INVOICING));
+		changeStepTo(PlaceOrderSagaStep.RESERVING_STOCK);
+	}
+
+	public boolean isReservingStock() {
+		return isRunningAt(PlaceOrderSagaStep.RESERVING_STOCK);
+	}
+
 	public boolean isRunningAt(PlaceOrderSagaStep step) {
 		return this.status == SagaStatus.RUNNING && this.step == step;
 	}

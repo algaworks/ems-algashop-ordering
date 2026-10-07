@@ -32,6 +32,7 @@ public abstract class SagaInstancePersistenceEntity {
 	private SagaStatus status;
 
 	@CreatedDate
+	@Column(updatable = false)
 	private OffsetDateTime createdAt;
 
 	@LastModifiedDate
