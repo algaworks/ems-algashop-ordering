@@ -85,9 +85,19 @@ public class PlaceOrderSaga {
 		startCompensation(PlaceOrderSagaFailure.PAYMENT_REFUSED);
 	}
 
+	public void failWithOutOfStock() {
+		require(isRunningAt(PlaceOrderSagaStep.RESERVING_STOCK));
+		startCompensation(PlaceOrderSagaFailure.OUT_OF_STOCK);
+	}
+
 	public void compensateOrder(){
 		require(canCompensateOrder());
 		changeStepTo(PlaceOrderSagaStep.CANCELLING_ORDER);
+	}
+
+	public void compensateInvoice(){
+		require(canCompensateInvoicing());
+		changeStepTo(PlaceOrderSagaStep.CANCELLING_INVOICE);
 	}
 
 	public void endCompensated() {
@@ -95,14 +105,23 @@ public class PlaceOrderSaga {
 		changeStatusTo(SagaStatus.COMPENSATED);
 	}
 
+	public boolean wasStockRejected() {
+		return this.failure == PlaceOrderSagaFailure.OUT_OF_STOCK;
+	}
+
 	private boolean canEndCompensated() {
 		return isCompensatingAt(PlaceOrderSagaStep.CANCELLING_ORDER);
 	}
 
 	private boolean canCompensateOrder() {
-		return this.status == SagaStatus.COMPENSATING && this.step.canChangeTo(PlaceOrderSagaStep.CANCELLING_ORDER);
+		return this.status == SagaStatus.COMPENSATING
+				&& this.step.canChangeTo(PlaceOrderSagaStep.CANCELLING_ORDER);
 	}
 
+	private boolean canCompensateInvoicing() {
+		return this.status == SagaStatus.COMPENSATING
+				&& this.step.canChangeTo(PlaceOrderSagaStep.CANCELLING_INVOICE);
+	}
 
 	private void startCompensation(PlaceOrderSagaFailure failure) {
 		changeStatusTo(SagaStatus.COMPENSATING);

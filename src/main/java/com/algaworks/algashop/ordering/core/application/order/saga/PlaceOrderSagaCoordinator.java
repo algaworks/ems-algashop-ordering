@@ -1,5 +1,6 @@
 package com.algaworks.algashop.ordering.core.application.order.saga;
 
+import com.algaworks.algashop.ordering.core.application.invoice.command.CancelInvoiceIntegrationCommand;
 import com.algaworks.algashop.ordering.core.application.invoice.command.IssueInvoiceIntegrationCommand;
 import com.algaworks.algashop.ordering.core.application.order.snapshot.OrderSnapshot;
 import com.algaworks.algashop.ordering.core.application.order.snapshot.OrderSnapshotAssembler;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class PlaceOrderSagaCoordinator implements ForCoordinatingPlaceOrderSaga {
 
 	private final ForStoringPlaceOrderSagas sagas;
@@ -31,7 +33,6 @@ public class PlaceOrderSagaCoordinator implements ForCoordinatingPlaceOrderSaga 
 	private final ForPublishingPlaceOrderSagaIntegrationCommands commands;
 
 	@Override
-	@Transactional
 	public void start(String rawOrderId) {
 		OrderId orderId = new OrderId(rawOrderId);
 		Order order = findOrder(orderId);
@@ -48,7 +49,6 @@ public class PlaceOrderSagaCoordinator implements ForCoordinatingPlaceOrderSaga 
 	}
 
 	@Override
-	@Transactional
 	public void onInvoicePaid(UUID sagaId) {
 		PlaceOrderSaga saga = findSaga(sagaId);
 
@@ -106,6 +106,23 @@ public class PlaceOrderSagaCoordinator implements ForCoordinatingPlaceOrderSaga 
 		saga.compensateOrder();
 		saga.endCompensated();
 		sagas.add(saga);
+	}
+
+	@Override
+	public void onStockReservationRejected(UUID sagaId) {
+		PlaceOrderSaga saga = findSaga(sagaId);
+		findOrder(saga.orderId());
+
+		if (saga.wasStockRejected()) {
+			logIgnored(saga);
+			return;
+		}
+
+		saga.failWithOutOfStock();
+		saga.compensateInvoice();
+		sagas.add(saga);
+
+		commands.send(saga.sagaId().toString(), new CancelInvoiceIntegrationCommand(saga.orderId().toString()));
 	}
 
 	private void logIgnored(PlaceOrderSaga saga) {

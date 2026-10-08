@@ -70,7 +70,9 @@ spring:
         Billing.InvoicePaidIntegrationReply:com.algaworks.algashop.ordering.core.application.invoice.reply.InvoicePaidIntegrationReply,
         Billing.InvoiceCanceledIntegrationReply:com.algaworks.algashop.ordering.core.application.invoice.reply.InvoiceCanceledIntegrationReply,
         Stock.ReserveStockIntegrationCommand:com.algaworks.algashop.ordering.core.application.stock.command.ReserveStockIntegrationCommand,
-        Stock.StockReservationConfirmedIntegrationReply:com.algaworks.algashop.ordering.core.application.stock.reply.StockReservationConfirmedIntegrationReply
+        Stock.StockReservationConfirmedIntegrationReply:com.algaworks.algashop.ordering.core.application.stock.reply.StockReservationConfirmedIntegrationReply,
+        Stock.StockReservationRejectedIntegrationReply:com.algaworks.algashop.ordering.core.application.stock.reply.StockReservationRejectedIntegrationReply,
+        Billing.CancelInvoiceIntegrationCommand:com.algaworks.algashop.ordering.core.application.invoice.command.CancelInvoiceIntegrationCommand
     producer:
       acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -139,5 +141,5 @@ logging:
     com.netflix.discovery.DiscoveryClient: OFF
     com.netflix.discovery: OFF
     com.netflix.eureka: OFF
-    org.springframework.kafka: OFF
-    org.apache.kafka: OFF
+#    org.springframework.kafka: OFF
+#    org.apache.kafka: OFF
