@@ -86,6 +86,28 @@ public class PlaceOrderSagaCoordinator implements ForCoordinatingPlaceOrderSaga 
 
 	}
 
+	@Override
+	public void onInvoiceCanceled(UUID sagaId) {
+		PlaceOrderSaga saga = findSaga(sagaId);
+
+		if (saga.isCompensated()) {
+			logIgnored(saga);
+			return;
+		}
+
+		if (!saga.hasFailed()) {
+			saga.failWithPaymentRefused();
+		}
+
+		Order order = findOrder(saga.orderId());
+		order.cancel();
+		orders.add(order);
+
+		saga.compensateOrder();
+		saga.endCompensated();
+		sagas.add(saga);
+	}
+
 	private void logIgnored(PlaceOrderSaga saga) {
 		log.info("Saga reply was ignored: saga={} order={} status={} step{}",
 				saga.sagaId(), saga.orderId(), saga.status(), saga.step());

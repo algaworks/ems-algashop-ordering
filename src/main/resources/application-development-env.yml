@@ -68,6 +68,7 @@ spring:
         Ordering.OrderReadyIntegrationEvent:com.algaworks.algashop.ordering.core.application.order.event.OrderReadyIntegrationEvent,
         Billing.IssueInvoiceIntegrationCommand:com.algaworks.algashop.ordering.core.application.invoice.command.IssueInvoiceIntegrationCommand,
         Billing.InvoicePaidIntegrationReply:com.algaworks.algashop.ordering.core.application.invoice.reply.InvoicePaidIntegrationReply,
+        Billing.InvoiceCanceledIntegrationReply:com.algaworks.algashop.ordering.core.application.invoice.reply.InvoiceCanceledIntegrationReply,
         Stock.ReserveStockIntegrationCommand:com.algaworks.algashop.ordering.core.application.stock.command.ReserveStockIntegrationCommand,
         Stock.StockReservationConfirmedIntegrationReply:com.algaworks.algashop.ordering.core.application.stock.reply.StockReservationConfirmedIntegrationReply
     producer:

@@ -14,13 +14,18 @@ public class PlaceOrderSaga {
 	private final OrderId orderId;
 	private SagaStatus status;
 	private PlaceOrderSagaStep step;
+	private PlaceOrderSagaFailure failure;
 	private long version;
 
-	private PlaceOrderSaga(UUID sagaId, OrderId orderId, SagaStatus status, PlaceOrderSagaStep step, long version) {
+	private PlaceOrderSaga(UUID sagaId, OrderId orderId,
+	                       SagaStatus status, PlaceOrderSagaStep step,
+	                       PlaceOrderSagaFailure failure,
+	                       long version) {
 		this.sagaId = Objects.requireNonNull(sagaId);
 		this.orderId = Objects.requireNonNull(orderId);
 		this.status = Objects.requireNonNull(status);
 		this.step = Objects.requireNonNull(step);
+		this.failure = failure;
 		this.version = version;
 	}
 
@@ -30,12 +35,17 @@ public class PlaceOrderSaga {
 				orderId,
 				SagaStatus.RUNNING,
 				PlaceOrderSagaStep.PLACING_ORDER,
+				null,
 				0L
 		);
 	}
 
-	public static PlaceOrderSaga existing(UUID sagaId, OrderId orderId, SagaStatus status, PlaceOrderSagaStep step, long version) {
-		return new PlaceOrderSaga(sagaId, orderId, status, step, version);
+	public static PlaceOrderSaga existing(UUID sagaId, OrderId orderId,
+	                                      SagaStatus status,
+	                                      PlaceOrderSagaStep step,
+	                                      PlaceOrderSagaFailure failure,
+	                                      long version) {
+		return new PlaceOrderSaga(sagaId, orderId, status, step, failure, version);
 	}
 
 	public void moveToInvoicing() {
@@ -60,6 +70,43 @@ public class PlaceOrderSaga {
 	public void endSucceeded() {
 		require(canEndSucceeded());
 		changeStatusTo(SagaStatus.SUCCEEDED);
+	}
+
+	public boolean isCompensated() {
+		return this.status == SagaStatus.COMPENSATED;
+	}
+
+	public boolean hasFailed() {
+		return this.failure != null;
+	}
+
+	public void failWithPaymentRefused() {
+		require(isRunningAt(PlaceOrderSagaStep.INVOICING));
+		startCompensation(PlaceOrderSagaFailure.PAYMENT_REFUSED);
+	}
+
+	public void compensateOrder(){
+		require(canCompensateOrder());
+		changeStepTo(PlaceOrderSagaStep.CANCELLING_ORDER);
+	}
+
+	public void endCompensated() {
+		require(canEndCompensated());
+		changeStatusTo(SagaStatus.COMPENSATED);
+	}
+
+	private boolean canEndCompensated() {
+		return isCompensatingAt(PlaceOrderSagaStep.CANCELLING_ORDER);
+	}
+
+	private boolean canCompensateOrder() {
+		return this.status == SagaStatus.COMPENSATING && this.step.canChangeTo(PlaceOrderSagaStep.CANCELLING_ORDER);
+	}
+
+
+	private void startCompensation(PlaceOrderSagaFailure failure) {
+		changeStatusTo(SagaStatus.COMPENSATING);
+		this.failure = failure;
 	}
 
 	private boolean canEndSucceeded() {
@@ -100,6 +147,10 @@ public class PlaceOrderSaga {
 
 	public UUID sagaId() {
 		return sagaId;
+	}
+
+	public PlaceOrderSagaFailure failure() {
+		return failure;
 	}
 
 	private void require(boolean precondition) {
