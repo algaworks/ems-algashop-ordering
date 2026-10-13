@@ -75,7 +75,7 @@ public class ShoppingCart
         Objects.requireNonNull(product);
         Objects.requireNonNull(quantity);
 
-        product.checkOutOfStock();
+        product.checkForQuantity(quantity);
 
         ShoppingCartItem shoppingCartItem = ShoppingCartItem.brandNew()
                 .shoppingCartId(this.id())

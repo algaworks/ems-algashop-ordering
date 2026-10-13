@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.out.web.product.client.http;
 
 import com.algaworks.algashop.ordering.core.domain.model.commons.Money;
+import com.algaworks.algashop.ordering.core.domain.model.commons.Quantity;
 import com.algaworks.algashop.ordering.core.domain.model.product.Product;
 import com.algaworks.algashop.ordering.core.domain.model.product.ProductCatalogService;
 import com.algaworks.algashop.ordering.core.domain.model.product.ProductId;
@@ -26,6 +27,7 @@ public class ProductCatalogServiceHttpImpl implements ProductCatalogService {
                         .name(new ProductName(productResponse.getName()))
                         .inStock(productResponse.getInStock())
                         .price(new Money(productResponse.getSalePrice()))
+                        .quantityInStock(new Quantity(productResponse.getQuantityInStock()))
                         .build()
         );
     }

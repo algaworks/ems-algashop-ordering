@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.core.domain.model.product;
 
 import com.algaworks.algashop.ordering.core.domain.model.commons.Money;
+import com.algaworks.algashop.ordering.core.domain.model.commons.Quantity;
 
 public class ProductTestDataBuilder {
 
@@ -14,6 +15,7 @@ public class ProductTestDataBuilder {
                 .id(DEFAULT_PRODUCT_ID)
                 .inStock(true)
                 .name(new ProductName("Notebook X11"))
+                .quantityInStock(new Quantity(100))
                 .price(new Money("3000"));
     }
 
@@ -22,6 +24,7 @@ public class ProductTestDataBuilder {
                 .id(new ProductId())
                 .name(new ProductName("Desktop FX9000"))
                 .price(new Money("5000"))
+                .quantityInStock(Quantity.ZERO)
                 .inStock(false);
     }
 
@@ -30,6 +33,7 @@ public class ProductTestDataBuilder {
                 .id(new ProductId())
                 .name(new ProductName("4GB RAM"))
                 .price(new Money("200"))
+                .quantityInStock(new Quantity(50))
                 .inStock(true);
     }
 
@@ -38,6 +42,7 @@ public class ProductTestDataBuilder {
                 .id(new ProductId())
                 .name(new ProductName("Mouse Pad"))
                 .price(new Money("100"))
+                .quantityInStock(new Quantity(30))
                 .inStock(true);
     }
 

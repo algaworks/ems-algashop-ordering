@@ -48,7 +48,7 @@ public class CheckoutService {
 
 		for (ShoppingCartItem item : items) {
 			order.addItem(new Product(item.productId(), item.name(),
-				item.price(), item.isAvailable()), item.quantity());
+				item.price(), item.isAvailable(), null), item.quantity());
 		}
 
 		order.place();

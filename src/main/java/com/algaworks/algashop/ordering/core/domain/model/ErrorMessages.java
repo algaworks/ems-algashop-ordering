@@ -1,5 +1,7 @@
 package com.algaworks.algashop.ordering.core.domain.model;
 
+import java.util.Locale;
+
 public class ErrorMessages {
     public static final String VALIDATION_ERROR_EMAIL_IS_INVALID = "Email is invalid";
     public static final String VALIDATION_ERROR_BIRTHDATE_MUST_IN_PAST = "BirthDate must be a past date";
@@ -39,4 +41,6 @@ public class ErrorMessages {
     public static final String ERROR_CUSTOMER_EMAIL_IS_IN_USE = "Customer email is in use";
 
     public static final String ERROR_CUSTOMER_ALREADY_HAVE_SHOPPING_CART = "Customer %s already have a Shopping Cart";
+
+    public static final String ERROR_PRODUCT_INSUFFICIENT_STOCK = "Product %s doesn't have the necessary quantity of %s";
 }
