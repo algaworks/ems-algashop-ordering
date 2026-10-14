@@ -90,7 +90,7 @@ class CheckoutApplicationServiceIT
         Assertions.assertThat(updatedCart).isPresent();
         Assertions.assertThat(updatedCart.get().isEmpty()).isTrue();
 
-        Mockito.verify(orderEventListener).listen(Mockito.any(OrderPlacedEvent.class));
+        Mockito.verify(orderEventListener).onOrderPlacedPublishIntegrationEvent(Mockito.any(OrderPlacedEvent.class));
     }
 
     @Test

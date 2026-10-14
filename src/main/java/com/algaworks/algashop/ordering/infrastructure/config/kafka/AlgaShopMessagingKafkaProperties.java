@@ -32,4 +32,7 @@ public class AlgaShopMessagingKafkaProperties {
 	@NotBlank
 	private String productCatalogStockCommandsTopicName;
 
+	@NotBlank
+	private String notificationsEmailCommandsTopicName;
+
 }
