@@ -33,7 +33,6 @@ public class OrderPlacedIntegrationEventAssembler {
   
     private OrderItemSnapshot toOrderItemData(OrderItem item) {  
         return new OrderItemSnapshot(  
-                item.id().toString(),
                 item.orderId().toString(),
                 item.productId().value(),  
                 item.productName().value(),  
