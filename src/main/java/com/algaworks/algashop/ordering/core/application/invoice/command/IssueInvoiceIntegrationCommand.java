@@ -67,7 +67,7 @@ public class IssueInvoiceIntegrationCommand implements OutboundIntegrationComman
                 .placedAt(order.placedAt())
                 .totalAmount(order.totalAmount())
                 .items(order.items().stream()
-                        .sorted(Comparator.comparing(OrderItemSnapshot::id))
+                        .sorted(Comparator.comparing(OrderItemSnapshot::orderItemId))
                         .toList())
                 .payment(new PaymentSnapshot(order.paymentMethod(), order.creditCardId()))
                 .shipping(order.shipping())
