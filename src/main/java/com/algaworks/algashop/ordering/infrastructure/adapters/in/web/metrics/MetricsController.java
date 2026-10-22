@@ -2,6 +2,7 @@ package com.algaworks.algashop.ordering.infrastructure.adapters.in.web.metrics;
 
 import com.algaworks.algashop.ordering.core.ports.in.metrics.ForQueryingMetrics;
 import com.algaworks.algashop.ordering.core.ports.out.metrics.SalesOverviewOutput;
+import com.algaworks.algashop.ordering.core.ports.out.metrics.TotalOverviewOutput;
 import com.algaworks.algashop.ordering.infrastructure.config.security.SecurityAnnotations;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -38,6 +39,12 @@ public class MetricsController {
 		}
 
 		return forQueryingMetrics.getSalesOverview(yearMonthStart, yearMonthEnd);
+	}
+
+	@SecurityAnnotations.CanReadMetrics
+	@GetMapping("/total-overview")
+	public TotalOverviewOutput getTotalOverview() {
+		return forQueryingMetrics.getTotalOverview();
 	}
 
 }

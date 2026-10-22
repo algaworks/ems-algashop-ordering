@@ -2,6 +2,7 @@ package com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.
 
 import com.algaworks.algashop.ordering.core.ports.out.metrics.ForObtainingMetrics;
 import com.algaworks.algashop.ordering.core.ports.out.metrics.SalesOverviewOutput;
+import com.algaworks.algashop.ordering.core.ports.out.metrics.TotalOverviewOutput;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,16 @@ public class ForObtainingMetricsJdbcImpl implements ForObtainingMetrics {
             order by 1
 			""";
 
+	private static final String TOTAL_OVERVIEW_SQL = """
+			select count(c.id) as active_customers,
+			       count(sc.id) as active_shopping_carts
+			from customer c
+			left join shopping_cart sc
+			    on sc.customer_id = c.id
+			    and sc.total_items > 0
+			where c.archived is false
+			""";
+
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	@Override
@@ -40,6 +51,17 @@ public class ForObtainingMetricsJdbcImpl implements ForObtainingMetrics {
 						YearMonth.parse(rs.getString("year_month")),
 						rs.getInt("quantity"),
 						rs.getBigDecimal("revenue")
+					)
+				);
+	}
+
+	@Override
+	public TotalOverviewOutput getTotalOverview() {
+		return jdbcTemplate.queryForObject(TOTAL_OVERVIEW_SQL,
+				Map.of(),
+				(rs, rowNum) -> new TotalOverviewOutput(
+						rs.getInt("active_customers"),
+						rs.getInt("active_shopping_carts")
 					)
 				);
 	}
