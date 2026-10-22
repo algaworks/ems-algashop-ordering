@@ -63,7 +63,7 @@ public class SecurityAnnotations {
 
     @Target({ElementType.METHOD, ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
-    @PreAuthorize("hasAuthority('SCOPE_metrics:read') and hasRole('MANAGER')")
+    @PreAuthorize("hasAuthority('SCOPE_metrics:read') and not hasRole('CUSTOMER')")
     public @interface CanReadMetrics {}
 }
 
