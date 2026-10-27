@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record OrderItemSnapshot(
-//		@NotBlank String id, //Remova
 		@NotBlank String orderItemId,
 		@NotNull UUID productId,
 		@NotBlank String productName,
