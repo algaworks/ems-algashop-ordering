@@ -39,6 +39,8 @@ public class OutboxProperties {
 	@NotNull
 	private Duration batchDeadLine;
 
+	private boolean deleteAfterRecord;
+
 	@Data
 	public static class Dispatcher {
 		private boolean enabled = false;

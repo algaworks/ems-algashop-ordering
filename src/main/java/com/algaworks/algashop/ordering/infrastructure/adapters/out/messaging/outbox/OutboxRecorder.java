@@ -22,6 +22,8 @@ public class OutboxRecorder {
 	private final OutboxMessageRepository repository;
 	private final JacksonJsonSerializer<Object> outboxJsonSerializer;
 
+	private final OutboxProperties outboxProperties;
+
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void record(OutboxDraft draft) {
 		Object message = draft.payload();
@@ -40,6 +42,10 @@ public class OutboxRecorder {
 				.build();
 
 		repository.save(outboxMessage);
+
+		if (outboxProperties.isDeleteAfterRecord()) { //Debezium
+			repository.deleteMessage(outboxMessage.getId());
+		}
 
 		log.info("Recorder {} on outbox: channel={} aggregateId{} id={}", message.getClass().getSimpleName(),
 				draft.channelName(), draft.aggregateId(), outboxMessage.getId());

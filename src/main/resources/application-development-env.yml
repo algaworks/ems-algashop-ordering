@@ -129,6 +129,7 @@ algashop:
       max-attempts: 10
       backoff: PT5S
       batch-deadline: PT3M
+      delete-after-record: true
       dispatcher:
         enabled: false
 
