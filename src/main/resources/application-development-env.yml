@@ -130,7 +130,7 @@ algashop:
       backoff: PT5S
       batch-deadline: PT3M
       dispatcher:
-        enabled: true
+        enabled: false
 
 eureka:
   client:
